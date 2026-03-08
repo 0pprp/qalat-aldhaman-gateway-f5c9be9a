@@ -7,6 +7,7 @@ const Footer = () => {
   const { t, isRTL } = useLanguage();
 
   const navLinks = [
+    { id: 'showroom', label: t('المعرض الدائم', 'Permanent Showroom') },
     { id: 'about', label: t('من نحن', 'About Us') },
     { id: 'values', label: t('قيمنا', 'Values') },
     { id: 'vision-mission-goals', label: t('رؤيتنا', 'Vision') },

@@ -1,6 +1,6 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'framer-motion';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MapPin, Users, Calendar, TrendingUp, ChevronRight, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import logo from '@/assets/logo-main.png';
@@ -8,6 +8,7 @@ import logo from '@/assets/logo-main.png';
 interface Branch {
   nameAr: string;
   nameEn: string;
+  imagePath: string;
   addressAr: string;
   addressEn: string;
   tradingVolume: string;
@@ -21,6 +22,7 @@ const branches: Branch[] = [
   {
     nameAr: 'فرع النجف الأشرف',
     nameEn: 'Najaf Al-Ashraf Branch',
+    imagePath: '/branches_pictures/najaf.jpg',
     addressAr: 'النجف - حي السلام - خلف مدينة الألعاب',
     addressEn: 'Najaf – Al-Salam Neighborhood – Behind the Amusement Park',
     tradingVolume: '10%',
@@ -32,6 +34,7 @@ const branches: Branch[] = [
   {
     nameAr: 'فرع بغداد الكرخ',
     nameEn: 'Baghdad, Karkh Branch',
+    imagePath: '/branches_pictures/baghdad-karkh.jpg',
     addressAr: 'الإسكان - شارع مستشفى الأطفال - مقابل عقارات الغدير',
     addressEn: 'Al-Iskan – Pediatric Hospital Street – Opposite Al-Ghadir Real Estate',
     tradingVolume: '7%',
@@ -43,6 +46,7 @@ const branches: Branch[] = [
   {
     nameAr: 'فرع بغداد الرصافة',
     nameEn: 'Baghdad, Rusafa Branch',
+    imagePath: '/branches_pictures/baghdad-rusafa.jpg',
     addressAr: 'شارع فلسطين قرب ساحة النخيل، بالقرب من كلية الرافدين',
     addressEn: 'Palestine Street near Al-Nakhel Intersection, near Al-Rafidain College',
     tradingVolume: '19%',
@@ -54,6 +58,7 @@ const branches: Branch[] = [
   {
     nameAr: 'فرع البصرة',
     nameEn: 'Basra Branch',
+    imagePath: '/branches_pictures/basra.jpg',
     addressAr: 'الجزائر - العباسية - بالقرب من شركة آسياسيل',
     addressEn: 'Al-Jaza\'er – Al-Abbasiya – Near AsiaCell Company',
     tradingVolume: '25%',
@@ -65,6 +70,7 @@ const branches: Branch[] = [
   {
     nameAr: 'فرع كربلاء',
     nameEn: 'Karbala Branch',
+    imagePath: '/branches_pictures/karbala.jpg',
     addressAr: 'حي الملحق - مقابل دائرة التسجيل العقاري',
     addressEn: 'Al-Mulhaq Neighborhood – Opposite the Real Estate Registration Office',
     tradingVolume: '6%',
@@ -76,6 +82,7 @@ const branches: Branch[] = [
   {
     nameAr: 'فرع بابل',
     nameEn: 'Babylon Branch',
+    imagePath: '/branches_pictures/babel.jpg',
     addressAr: 'شارع القيادة - مجاور لشركة جوان للمقاولات',
     addressEn: 'Al-Qiyada Street – Adjacent to Jawan Contracting Company',
     tradingVolume: '4%',
@@ -87,6 +94,7 @@ const branches: Branch[] = [
   {
     nameAr: 'فرع السماوة',
     nameEn: 'Samawah Branch',
+    imagePath: '/branches_pictures/samawah.jpg',
     addressAr: 'حي الصدر - فرع صيدلية ركن العلاج',
     addressEn: 'Al-Sadr Neighborhood – Rukn Al-Ilaj Pharmacy Branch',
     tradingVolume: '3%',
@@ -98,6 +106,7 @@ const branches: Branch[] = [
   {
     nameAr: 'فرع الناصرية',
     nameEn: 'Nasiriyah Branch',
+    imagePath: '/branches_pictures/nasiriyah.jpg',
     addressAr: 'الشامخ - بالقرب من مخابز الدرويش',
     addressEn: 'Al-Shamukh – Near Al-Darwish Bakeries',
     tradingVolume: '7%',
@@ -109,6 +118,7 @@ const branches: Branch[] = [
   {
     nameAr: 'فرع الديوانية',
     nameEn: 'Diwaniyah Branch',
+    imagePath: '/branches_pictures/diwaniyah.jpg',
     addressAr: 'حي الحضارة - شارع أسواق طيبة',
     addressEn: 'Al-Hadara Neighborhood – Tayba Markets Street',
     tradingVolume: '4%',
@@ -120,6 +130,7 @@ const branches: Branch[] = [
   {
     nameAr: 'فرع ديالى',
     nameEn: 'Diyala Branch',
+    imagePath: '/branches_pictures/diyala.jpg',
     addressAr: 'بعقوبة - حي 9 نيسان - بالقرب من متوسطة النوارس',
     addressEn: 'Baqubah – 9 Nisan Neighborhood – Near Al-Nawares Intermediate School',
     tradingVolume: '5%',
@@ -131,6 +142,7 @@ const branches: Branch[] = [
   {
     nameAr: 'فرع الموصل',
     nameEn: 'Mosul Branch',
+    imagePath: '/branches_pictures/mosul.jpg',
     addressAr: 'الجانب الأيسر - حي النور - مقابل التل خلف مشاتل النور',
     addressEn: 'Left Side – Al-Nour Neighborhood – Opposite the Hill behind Al-Nour Nurseries',
     tradingVolume: '6%',
@@ -142,6 +154,7 @@ const branches: Branch[] = [
   {
     nameAr: 'فرع كركوك',
     nameEn: 'Kirkuk Branch',
+    imagePath: '/branches_pictures/kirkuk.jpg',
     addressAr: 'شارع القدس - فرع ملحمة ومشويات أبو حقي',
     addressEn: 'Al-Quds Street – Abu Haqqi Butchery and Grills Branch',
     tradingVolume: '4%',
@@ -157,6 +170,17 @@ const Branches = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
+
+  useEffect(() => {
+    if (!selectedBranch) return;
+
+    const handleScrollClose = () => {
+      setSelectedBranch(null);
+    };
+
+    window.addEventListener('scroll', handleScrollClose, { passive: true });
+    return () => window.removeEventListener('scroll', handleScrollClose);
+  }, [selectedBranch]);
 
   return (
     <section id="branches" className="py-24 bg-muted/30 relative overflow-hidden">
@@ -278,21 +302,24 @@ const Branches = () => {
         </div>
 
         {/* Branch Detail Modal */}
-        {selectedBranch && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-foreground/50 backdrop-blur-sm"
-            onClick={() => setSelectedBranch(null)}
-          >
+        <AnimatePresence>
+          {selectedBranch && (
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-card rounded-3xl p-8 max-w-lg w-full shadow-2xl border border-border"
-              onClick={(e) => e.stopPropagation()}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.22, ease: 'easeOut' }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-foreground/50 backdrop-blur-sm"
+              onClick={() => setSelectedBranch(null)}
             >
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                transition={{ duration: 0.22, ease: 'easeOut' }}
+                className="bg-card rounded-3xl p-8 max-w-lg w-full shadow-2xl border border-border"
+                onClick={(e) => e.stopPropagation()}
+              >
               {/* Header with Logo */}
               <div className="flex items-start justify-between mb-6">
                 <div className="flex items-center gap-4">
@@ -319,6 +346,18 @@ const Branches = () => {
                 >
                   <X className="w-5 h-5" />
                 </button>
+              </div>
+
+              {/* Branch Image */}
+              <div className="mb-6">
+                <div className="w-full h-52 sm:h-56 rounded-2xl overflow-hidden border border-border shadow-card">
+                  <img
+                    src={selectedBranch.imagePath}
+                    alt={t(selectedBranch.nameAr, selectedBranch.nameEn)}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
               </div>
 
               {/* Details */}
@@ -358,9 +397,10 @@ const Branches = () => {
                   </p>
                 </div>
               </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
