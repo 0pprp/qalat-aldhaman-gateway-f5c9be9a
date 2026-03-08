@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { MapPin, Users, Calendar, TrendingUp, ChevronRight, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import logo from '@/assets/logo-main.png';
@@ -171,6 +172,106 @@ const Branches = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
 
+  const branchModal = selectedBranch ? (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.22, ease: 'easeOut' }}
+        className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-foreground/50 backdrop-blur-sm"
+        onClick={() => setSelectedBranch(null)}
+      >
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.95, opacity: 0 }}
+          transition={{ duration: 0.22, ease: 'easeOut' }}
+          className="bg-card rounded-3xl p-8 max-w-lg w-full shadow-2xl border border-border"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header with Logo */}
+          <div className="flex items-start justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl p-1">
+                <img
+                  src={logo}
+                  alt="Qalaat Al-Dhaman"
+                  className="w-full h-full object-contain drop-shadow-md"
+                />
+              </div>
+              <div>
+                <h3 className={`text-2xl font-bold text-foreground mb-1 ${isRTL ? 'font-arabic' : ''}`}>
+                  {t(selectedBranch.nameAr, selectedBranch.nameEn)}
+                </h3>
+                <span className="inline-flex items-center gap-1 text-sm text-muted-foreground">
+                  <Calendar className="w-4 h-4" />
+                  {t('تأسس', 'Est.')} {selectedBranch.yearEstablished}
+                </span>
+              </div>
+            </div>
+            <button
+              onClick={() => setSelectedBranch(null)}
+              className="p-2 rounded-full hover:bg-muted transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Branch Image */}
+          <div className="mb-6">
+            <div className="w-full h-52 sm:h-56 rounded-2xl overflow-hidden border border-border shadow-card">
+              <img
+                src={selectedBranch.imagePath}
+                alt={t(selectedBranch.nameAr, selectedBranch.nameEn)}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          </div>
+
+          {/* Details */}
+          <div className="space-y-4">
+            <div className="flex items-start gap-3 p-4 rounded-xl bg-muted/50">
+              <MapPin className="w-5 h-5 text-accent mt-0.5" />
+              <div>
+                <p className={`font-medium text-foreground mb-1 ${isRTL ? 'font-arabic' : ''}`}>
+                  {t('العنوان', 'Address')}
+                </p>
+                <p className={`text-muted-foreground ${isRTL ? 'font-arabic' : ''}`}>
+                  {t(selectedBranch.addressAr, selectedBranch.addressEn)}
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 text-center border border-primary/20">
+                <TrendingUp className="w-6 h-6 text-primary mx-auto mb-2" />
+                <p className="text-2xl font-bold text-foreground">{selectedBranch.tradingVolume}</p>
+                <p className={`text-sm text-muted-foreground ${isRTL ? 'font-arabic' : ''}`}>
+                  {t('حجم التداول', 'Trading Volume')}
+                </p>
+              </div>
+              <div className="p-4 rounded-xl bg-gradient-to-br from-accent/10 to-accent/5 text-center border border-accent/20">
+                <Users className="w-6 h-6 text-accent mx-auto mb-2" />
+                <p className="text-2xl font-bold text-foreground">{selectedBranch.staffCount}</p>
+                <p className={`text-sm text-muted-foreground ${isRTL ? 'font-arabic' : ''}`}>
+                  {t('الموظفين', 'Employees')}
+                </p>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20">
+              <p className={`text-primary font-medium ${isRTL ? 'font-arabic text-right' : ''}`}>
+                {t(selectedBranch.coverageAr, selectedBranch.coverageEn)}
+              </p>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  ) : null;
+
   useEffect(() => {
     if (!selectedBranch) return;
 
@@ -301,107 +402,11 @@ const Branches = () => {
           ))}
         </div>
 
-        {/* Branch Detail Modal */}
-        <AnimatePresence>
-          {selectedBranch && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.22, ease: 'easeOut' }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-foreground/50 backdrop-blur-sm"
-              onClick={() => setSelectedBranch(null)}
-            >
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.95, opacity: 0 }}
-                transition={{ duration: 0.22, ease: 'easeOut' }}
-                className="bg-card rounded-3xl p-8 max-w-lg w-full shadow-2xl border border-border"
-                onClick={(e) => e.stopPropagation()}
-              >
-              {/* Header with Logo */}
-              <div className="flex items-start justify-between mb-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl p-1">
-                    <img 
-                      src={logo} 
-                      alt="Qalaat Al-Dhaman" 
-                      className="w-full h-full object-contain drop-shadow-md"
-                    />
-                  </div>
-                  <div>
-                    <h3 className={`text-2xl font-bold text-foreground mb-1 ${isRTL ? 'font-arabic' : ''}`}>
-                      {t(selectedBranch.nameAr, selectedBranch.nameEn)}
-                    </h3>
-                    <span className="inline-flex items-center gap-1 text-sm text-muted-foreground">
-                      <Calendar className="w-4 h-4" />
-                      {t('تأسس', 'Est.')} {selectedBranch.yearEstablished}
-                    </span>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setSelectedBranch(null)}
-                  className="p-2 rounded-full hover:bg-muted transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Branch Image */}
-              <div className="mb-6">
-                <div className="w-full h-52 sm:h-56 rounded-2xl overflow-hidden border border-border shadow-card">
-                  <img
-                    src={selectedBranch.imagePath}
-                    alt={t(selectedBranch.nameAr, selectedBranch.nameEn)}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                </div>
-              </div>
-
-              {/* Details */}
-              <div className="space-y-4">
-                <div className="flex items-start gap-3 p-4 rounded-xl bg-muted/50">
-                  <MapPin className="w-5 h-5 text-accent mt-0.5" />
-                  <div>
-                    <p className={`font-medium text-foreground mb-1 ${isRTL ? 'font-arabic' : ''}`}>
-                      {t('العنوان', 'Address')}
-                    </p>
-                    <p className={`text-muted-foreground ${isRTL ? 'font-arabic' : ''}`}>
-                      {t(selectedBranch.addressAr, selectedBranch.addressEn)}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 text-center border border-primary/20">
-                    <TrendingUp className="w-6 h-6 text-primary mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-foreground">{selectedBranch.tradingVolume}</p>
-                    <p className={`text-sm text-muted-foreground ${isRTL ? 'font-arabic' : ''}`}>
-                      {t('حجم التداول', 'Trading Volume')}
-                    </p>
-                  </div>
-                  <div className="p-4 rounded-xl bg-gradient-to-br from-accent/10 to-accent/5 text-center border border-accent/20">
-                    <Users className="w-6 h-6 text-accent mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-foreground">{selectedBranch.staffCount}</p>
-                    <p className={`text-sm text-muted-foreground ${isRTL ? 'font-arabic' : ''}`}>
-                      {t('الموظفين', 'Employees')}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="p-4 rounded-xl bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20">
-                  <p className={`text-primary font-medium ${isRTL ? 'font-arabic text-right' : ''}`}>
-                    {t(selectedBranch.coverageAr, selectedBranch.coverageEn)}
-                  </p>
-                </div>
-              </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
+
+      {typeof document !== 'undefined' && branchModal
+        ? createPortal(branchModal, document.body)
+        : null}
     </section>
   );
 };

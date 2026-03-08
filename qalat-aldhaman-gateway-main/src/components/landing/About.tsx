@@ -7,7 +7,7 @@ const About = () => {
   const { t, isRTL } = useLanguage();
 
   return (
-    <section id="about" className="py-24 bg-background relative overflow-hidden">
+    <section id="about" className="py-16 sm:py-24 bg-background relative overflow-hidden">
       {/* Static Background Decoration */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
@@ -27,7 +27,7 @@ const About = () => {
 
       <div className="section-container relative z-10">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-10 sm:mb-16">
           <span className={`inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-semibold text-sm mb-4 ${isRTL ? 'font-arabic' : ''}`}>
             {t('من نحن', 'About Us')}
           </span>
@@ -36,11 +36,11 @@ const About = () => {
           </h2>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
+        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-start">
           {/* Left: Green square with white-square logo and gold quote (static) */}
           <div className="flex justify-center lg:justify-start">
             <div
-              className="w-[420px] h-[420px] rounded-2xl p-8 text-center relative flex flex-col items-center justify-center shadow-2xl bg-accent"
+              className="w-full max-w-[320px] sm:max-w-[420px] aspect-square rounded-2xl p-5 sm:p-8 text-center relative flex flex-col items-center justify-center shadow-2xl bg-accent"
               style={{
                 // صريح: تدرج أخضر لإرجاع الدرجة القديمة (fallback عبر bg-accent)
                 backgroundImage: 'linear-gradient(135deg, #0b816f 0%, #129977 100%)',
@@ -49,27 +49,27 @@ const About = () => {
               {/* Animated edge circles (decorative, continuous) */}
               <motion.div
                 aria-hidden="true"
-                className="absolute -right-6 -top-6 w-20 h-20 rounded-full border-2 border-dashed border-yellow-300 opacity-95 pointer-events-none"
+                className="absolute -right-4 sm:-right-6 -top-4 sm:-top-6 w-14 h-14 sm:w-20 sm:h-20 rounded-full border-2 border-dashed border-yellow-300 opacity-95 pointer-events-none"
                 animate={{ rotate: [0, 360] }}
                 transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
               />
               <motion.div
                 aria-hidden="true"
-                className="absolute -left-8 -bottom-8 w-24 h-24 rounded-full border-2 border-dashed border-accent/30 opacity-80 pointer-events-none"
+                className="absolute -left-6 sm:-left-8 -bottom-6 sm:-bottom-8 w-16 h-16 sm:w-24 sm:h-24 rounded-full border-2 border-dashed border-accent/30 opacity-80 pointer-events-none"
                 animate={{ rotate: [360, 0] }}
                 transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
               />
 
               {/* Square white logo container (rounded corners) */}
-              <div className="w-32 h-32 rounded-xl bg-white p-3 flex items-center justify-center mb-6">
+              <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-xl bg-white p-3 flex items-center justify-center mb-4 sm:mb-6">
                 <img src={logo} alt={t('قلعة الضمان', 'Qalaat Aldhaman')} className="w-full h-full object-contain" />
               </div>
 
-              <h3 className="text-2xl font-bold mb-2 text-yellow-400">{t('قلعة الضمان', 'Qalaat Aldhaman')}</h3>
-              <p className="text-yellow-400 mb-6">{t('منذ 2010', 'Since 2010')}</p>
+              <h3 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2 text-yellow-400">{t('قلعة الضمان', 'Qalaat Aldhaman')}</h3>
+              <p className="text-yellow-400 mb-4 sm:mb-6">{t('منذ 2010', 'Since 2010')}</p>
 
-              <div className="mt-4 px-4">
-                <p className="text-center text-[18px] font-medium leading-snug text-yellow-400">
+              <div className="mt-2 sm:mt-4 px-2 sm:px-4">
+                <p className="text-center text-[15px] sm:text-[18px] font-medium leading-snug text-yellow-400">
                   {t(
                     '«قلعة الضمان منذ 2010 تبني الثقة وتحقق التقدم»',
                     'Since 2010, Qalat Aldhaman Builds Trust and Achieves Progress'
@@ -81,28 +81,28 @@ const About = () => {
 
           {/* Right: Institutional description (replaces previous stat cards) */}
           <div className={`${isRTL ? 'text-right font-arabic' : 'text-left'}`}>
-            <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+            <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-4 sm:mb-6">
               {t(
                 'قلعة الضمان شركة عراقية رائدة تأسست عام 2010، تقدم حلولاً تجارية وتمويلية مبتكرة داخل السوق العراقي.',
                 'Qalaat Aldhaman is a leading Iraqi company founded in 2010, providing innovative commercial and financing solutions within the Iraqi market.'
               )}
             </p>
 
-            <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+            <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-4 sm:mb-6">
               {t(
                 'نعتمد نموذج عمل يقوم على شراء البضائع نقداً وإعادة بيعها بنظام التقسيط اليومي المرن، مما يمنح عملاءنا سهولة في السداد واستقراراً في الحركة التجارية.',
                 'We operate a structured model of purchasing goods for cash and reselling them through a flexible daily-installment system, offering our customers convenience in payment and continuity in trade flows.'
               )}
             </p>
 
-            <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+            <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-4 sm:mb-6">
               {t(
                 'على مدار أكثر من 15 عاماً توسعت عملياتنا لتغطي أهم المحافظات العراقية، وبنينا فريق عمل يتجاوز 200 موظف متخصص في المبيعات والتحصيل وإدارة العمليات.',
                 'Over more than 15 years, our operations have expanded across key Iraqi provinces, and we have built a team of over 200 professionals specialized in sales, collections and operations management.'
               )}
             </p>
 
-            <p className="text-lg text-muted-foreground leading-relaxed">
+            <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
               {t(
                 'اليوم نخدم أكثر من 150,000 عميل ونمتلك حضوراً فعلياً وتأثيراً واضحاً في السوق المحلي.',
                 'Today we serve over 150,000 customers and maintain a strong physical presence and clear influence in the local market.'

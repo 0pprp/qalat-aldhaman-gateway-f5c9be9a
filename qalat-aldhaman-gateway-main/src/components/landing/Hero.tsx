@@ -81,7 +81,7 @@ const Hero = () => {
 
       <div className="absolute inset-0 bg-gradient-to-r from-primary/40 via-transparent to-secondary/30" />
 
-      <div className="section-container relative z-10 min-h-[100svh] flex flex-col items-center justify-center text-center pt-28 pb-[clamp(11rem,30svh,18rem)] md:pb-[clamp(10rem,26svh,16rem)] lg:pb-[clamp(8rem,20svh,13rem)]">
+      <div className="section-container relative z-10 min-h-[100svh] flex flex-col items-center justify-center text-center pt-28 pb-[clamp(11rem,30svh,18rem)] md:pb-[clamp(12rem,31svh,17rem)] lg:pb-[clamp(10rem,24svh,14rem)] xl:pb-[clamp(8rem,20svh,13rem)]">
         <motion.h1
           initial={{ opacity: 0, y: 22 }}
           animate={{ opacity: 1, y: 0 }}
@@ -108,8 +108,8 @@ const Hero = () => {
 
       </div>
 
-      <div className="section-container absolute left-1/2 bottom-6 sm:bottom-7 md:bottom-8 lg:bottom-10 xl:bottom-12 2xl:bottom-0 w-full -translate-x-1/2 translate-y-0 2xl:translate-y-[8%] z-20">
-        <div className="grid grid-cols-2 2xl:grid-cols-4 gap-2.5 sm:gap-3 md:gap-4 lg:gap-5">
+      <div className="section-container absolute left-1/2 bottom-6 sm:bottom-7 md:bottom-8 lg:bottom-9 xl:bottom-0 w-full -translate-x-1/2 translate-y-0 xl:translate-y-[6%] 2xl:translate-y-[8%] z-20">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 md:gap-3 lg:gap-4 xl:gap-5">
           {cards.map((card, index) => {
             const IconComp = card.Icon;
 
@@ -119,17 +119,17 @@ const Hero = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, delay: 0.2 + index * 0.08, ease: 'easeOut' }}
                 whileHover={{ y: -8, boxShadow: '0 22px 46px rgba(212,175,55,0.30), 0 28px 52px rgba(8,15,20,0.18)' }}
-                className="group h-full min-h-[150px] sm:min-h-[158px] lg:min-h-[170px] 2xl:min-h-[176px] rounded-2xl bg-primary/95 hover:bg-white backdrop-blur-md border border-primary/70 hover:border-accent/60 ring-1 ring-white/15 shadow-[0_18px_38px_rgba(8,15,20,0.28)] p-3 sm:p-3.5 md:p-4 lg:p-4 xl:p-5 2xl:p-6 text-start transition-colors duration-300"
+                className="group h-full min-h-[148px] sm:min-h-[154px] md:min-h-[138px] lg:min-h-[150px] xl:min-h-[168px] 2xl:min-h-[176px] rounded-2xl bg-primary/95 hover:bg-white backdrop-blur-md border border-primary/70 hover:border-accent/60 ring-1 ring-white/15 shadow-[0_18px_38px_rgba(8,15,20,0.28)] p-3 sm:p-3.5 md:p-3 lg:p-3.5 xl:p-5 2xl:p-6 text-start transition-colors duration-300"
                 style={{ transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)' }}
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               >
-                <div className="w-9 h-9 sm:w-10 sm:h-10 lg:w-11 lg:h-11 rounded-xl bg-white/12 text-white group-hover:bg-primary/10 group-hover:text-primary flex items-center justify-center mb-3 sm:mb-4 transition-colors duration-300">
-                  <IconComp className="w-4 h-4 sm:w-5 sm:h-5" />
+                <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-8 md:h-8 lg:w-9 lg:h-9 xl:w-11 xl:h-11 rounded-xl bg-white/12 text-white group-hover:bg-primary/10 group-hover:text-primary flex items-center justify-center mb-3 sm:mb-4 md:mb-2.5 lg:mb-3 xl:mb-4 transition-colors duration-300">
+                  <IconComp className="w-4 h-4 md:w-3.5 md:h-3.5 lg:w-4 lg:h-4 xl:w-5 xl:h-5" />
                 </div>
-                <h3 className={`text-sm sm:text-base 2xl:text-lg font-bold text-white group-hover:text-foreground mb-1.5 sm:mb-2 transition-colors duration-300 ${isRTL ? 'font-arabic text-right' : ''}`}>
+                <h3 className={`text-sm sm:text-base md:text-[13px] lg:text-sm xl:text-base 2xl:text-lg font-bold text-white group-hover:text-foreground mb-1.5 sm:mb-2 md:mb-1.5 transition-colors duration-300 ${isRTL ? 'font-arabic text-right' : ''}`}>
                   {t(card.titleAr, card.titleEn)}
                 </h3>
-                <p className={`text-[11px] sm:text-xs lg:text-sm text-white/80 group-hover:text-muted-foreground leading-relaxed pb-[5px] transition-colors duration-300 ${isRTL ? 'font-arabic text-right' : ''}`}>
+                <p className={`text-[11px] sm:text-xs md:text-[10px] lg:text-xs xl:text-sm text-white/80 group-hover:text-muted-foreground leading-relaxed pb-[5px] transition-colors duration-300 ${isRTL ? 'font-arabic text-right' : ''}`}>
                   {t(card.descAr, card.descEn)}
                 </p>
               </motion.div>
