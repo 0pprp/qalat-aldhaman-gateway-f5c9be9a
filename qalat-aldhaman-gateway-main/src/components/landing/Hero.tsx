@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { Building2, FileText, MapPin, Phone } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Building2, FileText, MapPin, Phone, ShoppingBag } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const Hero = () => {
@@ -109,6 +110,21 @@ const Hero = () => {
       </div>
 
       <div className="section-container absolute left-1/2 bottom-6 sm:bottom-7 md:bottom-8 lg:bottom-9 xl:bottom-0 w-full -translate-x-1/2 translate-y-0 xl:translate-y-[6%] 2xl:translate-y-[8%] z-20">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.12, ease: 'easeOut' }}
+          className="flex justify-center mb-4 sm:mb-5"
+        >
+          <Link
+            to="/store"
+            className={`group inline-flex items-center gap-2.5 px-7 sm:px-8 py-3.5 rounded-xl bg-primary text-primary-foreground font-bold text-base sm:text-lg shadow-[0_18px_38px_rgba(47,143,131,0.35)] transition-all duration-300 hover:-translate-y-1 hover:bg-primary/90 hover:shadow-[0_22px_46px_rgba(47,143,131,0.42)] ${isRTL ? 'font-arabic' : ''}`}
+          >
+            <ShoppingBag className="w-5 h-5" />
+            <span>{t('تصفح المتجر', 'Browse Store')}</span>
+          </Link>
+        </motion.div>
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 md:gap-3 lg:gap-4 xl:gap-5">
           {cards.map((card, index) => {
             const IconComp = card.Icon;
