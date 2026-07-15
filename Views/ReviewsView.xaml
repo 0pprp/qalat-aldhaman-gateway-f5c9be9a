@@ -17,8 +17,7 @@
 
         <TextBlock Grid.Row="0"
                    Text="الآراء"
-                   FontSize="22"
-                   FontWeight="Bold"
+                   Style="{StaticResource HeaderTextStyle}"
                    Margin="0,0,0,16" />
 
         <CheckBox Grid.Row="1"
@@ -32,13 +31,13 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontSize="16"
-                       Foreground="#666" />
+                       Foreground="{StaticResource BrandTextSecondaryBrush}" />
 
             <StackPanel Visibility="{Binding IsError, Converter={StaticResource BoolToVis}}"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
                 <TextBlock Text="{Binding ErrorMessage}"
-                           Foreground="#C0392B"
+                           Foreground="{StaticResource DangerBrush}"
                            Margin="0,0,0,12"
                            TextAlignment="Center"
                            TextWrapping="Wrap"
@@ -54,7 +53,7 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontSize="16"
-                       Foreground="#888" />
+                       Foreground="{StaticResource BrandTextSecondaryBrush}" />
 
             <DataGrid ItemsSource="{Binding Reviews}"
                       Visibility="{Binding HasReviews, Converter={StaticResource BoolToVis}}"
@@ -81,6 +80,7 @@
                                             Command="{Binding DataContext.ApproveCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                             CommandParameter="{Binding}" />
                                     <Button Content="حذف"
+                                            Style="{StaticResource DangerButtonStyle}"
                                             Margin="4,2"
                                             Padding="10,4"
                                             Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"

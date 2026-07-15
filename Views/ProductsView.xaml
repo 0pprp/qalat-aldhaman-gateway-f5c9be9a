@@ -18,16 +18,11 @@
         <DockPanel Grid.Row="0" Margin="0,0,0,16">
             <TextBlock DockPanel.Dock="Right"
                        Text="المنتجات"
-                       FontSize="22"
-                       FontWeight="Bold"
+                       Style="{StaticResource HeaderTextStyle}"
                        VerticalAlignment="Center" />
             <Button DockPanel.Dock="Left"
                     Content="+ إضافة منتج جديد"
-                    Command="{Binding AddProductCommand}"
-                    Padding="16,8"
-                    Background="#1F5F5B"
-                    Foreground="White"
-                    BorderThickness="0" />
+                    Command="{Binding AddProductCommand}" />
         </DockPanel>
 
         <DockPanel Grid.Row="1" Margin="0,0,0,16">
@@ -45,13 +40,13 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontSize="16"
-                       Foreground="#666" />
+                       Foreground="{StaticResource BrandTextSecondaryBrush}" />
 
             <StackPanel Visibility="{Binding IsError, Converter={StaticResource BoolToVis}}"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
                 <TextBlock Text="{Binding ErrorMessage}"
-                           Foreground="#C0392B"
+                           Foreground="{StaticResource DangerBrush}"
                            Margin="0,0,0,12"
                            TextAlignment="Center"
                            TextWrapping="Wrap"
@@ -67,7 +62,7 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontSize="16"
-                       Foreground="#888" />
+                       Foreground="{StaticResource BrandTextSecondaryBrush}" />
 
             <DataGrid ItemsSource="{Binding Products}"
                       Visibility="{Binding HasProducts, Converter={StaticResource BoolToVis}}"
@@ -94,6 +89,7 @@
                                             Command="{Binding DataContext.EditProductCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                             CommandParameter="{Binding}" />
                                     <Button Content="حذف"
+                                            Style="{StaticResource DangerButtonStyle}"
                                             Margin="4,2"
                                             Padding="10,4"
                                             Command="{Binding DataContext.DeleteProductCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"

@@ -6,12 +6,17 @@
         xmlns:local="clr-namespace:QalatAldhaman.Store.Admin"
         xmlns:views="clr-namespace:QalatAldhaman.Store.Admin.Views"
         xmlns:vm="clr-namespace:QalatAldhaman.Store.Admin.ViewModels"
+        xmlns:converters="clr-namespace:QalatAldhaman.Store.Admin.Converters"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="لوحة تحكم قلعة الضمان" Height="600" Width="1000"
+        Title="لوحة تحكم قلعة الضمان" Height="640" Width="1080"
         FlowDirection="RightToLeft"
         FontFamily="Segoe UI"
+        Background="{StaticResource BrandBackgroundBrush}"
         WindowStartupLocation="CenterScreen">
     <Window.Resources>
+        <converters:NavIconConverter x:Key="NavIconConverter" />
+
         <!--
             نمط التنقل: ContentControl وحيد بمنطقة المحتوى، محتواه (Content) مربوط بـ CurrentViewModel
             بالـ MainViewModel. كل DataTemplate هنا يربط نوع ViewModel بالـ View المطابقة له — WPF يختار
@@ -38,75 +43,122 @@
             <views:DashboardView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:PlaceholderViewModel}">
-            <TextBlock FontSize="20"
+            <TextBlock Style="{StaticResource HeaderTextStyle}"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
-                       Foreground="#333333">
+                       Foreground="{StaticResource BrandTextSecondaryBrush}">
                 <Run Text="صفحة: " />
                 <Run Text="{Binding Title, Mode=OneWay}" FontWeight="Bold" />
                 <Run Text=" (قيد الإنشاء)" />
             </TextBlock>
         </DataTemplate>
+
+        <!-- عنصر تنقل بالـ Sidebar: أيقونة + نص، تمييز واضح للمُحدَّد حالياً، تأثير Hover ناعم. -->
+        <Style x:Key="NavListBoxItemStyle" TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="18,12" />
+            <Setter Property="Foreground" Value="#CFE3E0" />
+            <Setter Property="FontSize" Value="14.5" />
+            <Setter Property="HorizontalContentAlignment" Value="Right" />
+            <Setter Property="Margin" Value="10,2" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border x:Name="ItemBorder"
+                                Background="Transparent"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <Border.BorderThickness>0,0,3,0</Border.BorderThickness>
+                            <Border x:Name="AccentBar" BorderBrush="{StaticResource BrandAccentBrush}" BorderThickness="0" HorizontalAlignment="Right">
+                                <ContentPresenter />
+                            </Border>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="#1A6E69" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="#14615C" />
+                                <Setter TargetName="AccentBar" Property="BorderThickness" Value="0,0,3,0" />
+                                <Setter Property="Foreground" Value="White" />
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="220" />
+            <ColumnDefinition Width="230" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <!-- Sidebar -->
-        <Border Grid.Column="0" Background="#1F5F5B">
-            <Grid Margin="0,24,0,16">
+        <Border Grid.Column="0" Background="{StaticResource BrandPrimaryDarkBrush}">
+            <Grid Margin="0,28,0,16">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0"
+                <materialDesign:PackIcon Grid.Row="0"
+                                         Kind="ShieldCheckOutline"
+                                         Width="34" Height="34"
+                                         Foreground="{StaticResource BrandAccentBrush}"
+                                         HorizontalAlignment="Center"
+                                         Margin="0,0,0,8" />
+
+                <TextBlock Grid.Row="1"
                            Text="قلعة الضمان"
                            Foreground="White"
-                           FontSize="18"
+                           FontSize="19"
                            FontWeight="Bold"
                            HorizontalAlignment="Center"
                            Margin="0,0,0,4" />
 
-                <TextBlock Grid.Row="1"
+                <TextBlock Grid.Row="2"
                            Text="{Binding FullName}"
-                           Foreground="#B7D8D3"
-                           FontSize="13"
+                           Foreground="#9FC9C4"
+                           FontSize="12.5"
                            HorizontalAlignment="Center"
-                           Margin="0,0,0,20" />
+                           Margin="0,0,0,22" />
 
-                <ListBox Grid.Row="2"
+                <ListBox Grid.Row="3"
                          ItemsSource="{Binding NavItems}"
                          SelectedItem="{Binding SelectedNavItem, Mode=TwoWay}"
                          Background="Transparent"
-                         BorderThickness="0">
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="Padding" Value="16,12" />
-                            <Setter Property="Foreground" Value="White" />
-                            <Setter Property="FontSize" Value="15" />
-                            <Setter Property="HorizontalContentAlignment" Value="Right" />
-                        </Style>
-                    </ListBox.ItemContainerStyle>
+                         BorderThickness="0"
+                         ItemContainerStyle="{StaticResource NavListBoxItemStyle}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="{Binding Converter={StaticResource NavIconConverter}}"
+                                                         Width="19" Height="19"
+                                                         Margin="10,0,0,0"
+                                                         VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
                 </ListBox>
 
-                <Button Grid.Row="3"
+                <Button Grid.Row="4"
                         Content="تسجيل خروج"
                         Command="{Binding LogoutCommand}"
-                        Margin="16,0,16,0"
-                        Height="36"
-                        Background="#17403D"
-                        Foreground="White"
-                        BorderThickness="0" />
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        Foreground="#CFE3E0"
+                        BorderBrush="#2A6E68"
+                        Margin="16,8,16,0"
+                        Height="38" />
             </Grid>
         </Border>
 
         <!-- Content area: عنصر واحد فقط يُعرض بكل لحظة -->
-        <Border Grid.Column="1" Background="#F5FAF8">
+        <Border Grid.Column="1" Background="{StaticResource BrandBackgroundBrush}">
             <ContentControl Content="{Binding CurrentViewModel}" Focusable="False" />
         </Border>
     </Grid>

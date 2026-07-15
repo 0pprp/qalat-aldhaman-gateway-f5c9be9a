@@ -16,8 +16,7 @@
 
         <TextBlock Grid.Row="0"
                    Text="عقود طرق الدفع"
-                   FontSize="22"
-                   FontWeight="Bold"
+                   Style="{StaticResource HeaderTextStyle}"
                    Margin="0,0,0,20" />
 
         <Grid Grid.Row="1">
@@ -26,13 +25,13 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontSize="16"
-                       Foreground="#666" />
+                       Foreground="{StaticResource BrandTextSecondaryBrush}" />
 
             <StackPanel Visibility="{Binding IsError, Converter={StaticResource BoolToVis}}"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
                 <TextBlock Text="{Binding ErrorMessage}"
-                           Foreground="#C0392B"
+                           Foreground="{StaticResource DangerBrush}"
                            Margin="0,0,0,12"
                            TextAlignment="Center"
                            TextWrapping="Wrap"
@@ -50,14 +49,14 @@
                         <ColumnDefinition Width="140" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="طريقة الدفع" FontWeight="Bold" Foreground="#555555" />
-                    <TextBlock Grid.Column="1" Text="حالة الملف" FontWeight="Bold" Foreground="#555555" />
+                    <TextBlock Grid.Column="0" Text="طريقة الدفع" Style="{StaticResource FieldLabelTextStyle}" Margin="0" />
+                    <TextBlock Grid.Column="1" Text="حالة الملف" Style="{StaticResource FieldLabelTextStyle}" Margin="0" />
                 </Grid>
 
                 <ItemsControl ItemsSource="{Binding Contracts}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border BorderBrush="#DDDDDD" BorderThickness="0,0,0,1" Padding="12,16">
+                            <Border BorderBrush="{StaticResource BrandBorderBrush}" BorderThickness="0,0,0,1" Padding="12,16">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="220" />
@@ -86,10 +85,9 @@
                                     <StackPanel Grid.Column="4" VerticalAlignment="Center">
                                         <TextBlock Text="جارِ الرفع..."
                                                    Visibility="{Binding IsUploading, Converter={StaticResource BoolToVis}}"
-                                                   FontSize="11"
-                                                   Foreground="#666666" />
+                                                   Style="{StaticResource CaptionTextStyle}" />
                                         <TextBlock Text="{Binding ErrorMessage}"
-                                                   Foreground="#C0392B"
+                                                   Foreground="{StaticResource DangerBrush}"
                                                    FontSize="11"
                                                    TextWrapping="Wrap" />
                                     </StackPanel>

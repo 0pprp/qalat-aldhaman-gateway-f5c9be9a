@@ -3,30 +3,30 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              FontFamily="Segoe UI">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
-        <Style x:Key="Card" TargetType="Border">
-            <Setter Property="Background" Value="White" />
-            <Setter Property="BorderBrush" Value="#DDDDDD" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="6" />
-            <Setter Property="Padding" Value="16" />
+        <Style x:Key="Card" TargetType="Border" BasedOn="{StaticResource CardBorderStyle}">
             <Setter Property="Margin" Value="0,0,12,12" />
         </Style>
-        <Style x:Key="CardTitle" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#666666" />
-            <Setter Property="FontSize" Value="12" />
+        <Style x:Key="CardTitle" TargetType="TextBlock" BasedOn="{StaticResource CaptionTextStyle}">
             <Setter Property="Margin" Value="0,0,0,6" />
         </Style>
         <Style x:Key="CardValue" TargetType="TextBlock">
             <Setter Property="FontSize" Value="24" />
             <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="{StaticResource BrandTextPrimaryBrush}" />
         </Style>
-        <Style x:Key="SectionTitle" TargetType="TextBlock">
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="FontSize" Value="16" />
+        <Style x:Key="CardIcon" TargetType="materialDesign:PackIcon">
+            <Setter Property="Width" Value="26" />
+            <Setter Property="Height" Value="26" />
+            <Setter Property="Foreground" Value="{StaticResource BrandPrimaryBrush}" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+        </Style>
+        <Style x:Key="SectionTitle" TargetType="TextBlock" BasedOn="{StaticResource SubheaderTextStyle}">
             <Setter Property="Margin" Value="0,8,0,12" />
         </Style>
     </UserControl.Resources>
@@ -36,19 +36,14 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <DockPanel Grid.Row="0" Margin="0,0,0,16">
+        <DockPanel Grid.Row="0" Margin="0,0,0,20">
             <TextBlock DockPanel.Dock="Right"
                        Text="الإحصائيات"
-                       FontSize="22"
-                       FontWeight="Bold"
+                       Style="{StaticResource HeaderTextStyle}"
                        VerticalAlignment="Center" />
             <Button DockPanel.Dock="Left"
                     Content="تحديث"
-                    Command="{Binding LoadCommand}"
-                    Padding="16,8"
-                    Background="#1F5F5B"
-                    Foreground="White"
-                    BorderThickness="0" />
+                    Command="{Binding LoadCommand}" />
         </DockPanel>
 
         <Grid Grid.Row="1">
@@ -57,20 +52,19 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontSize="16"
-                       Foreground="#666" />
+                       Foreground="{StaticResource BrandTextSecondaryBrush}" />
 
             <StackPanel Visibility="{Binding IsError, Converter={StaticResource BoolToVis}}"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
                 <TextBlock Text="{Binding ErrorMessage}"
-                           Foreground="#C0392B"
+                           Foreground="{StaticResource DangerBrush}"
                            Margin="0,0,0,12"
                            TextAlignment="Center"
                            TextWrapping="Wrap"
                            MaxWidth="400" />
                 <Button Content="إعادة المحاولة"
                         Command="{Binding LoadCommand}"
-                        Padding="16,8"
                         HorizontalAlignment="Center" />
             </StackPanel>
 
@@ -81,43 +75,50 @@
                     <WrapPanel Orientation="Horizontal">
                         <Border Style="{StaticResource Card}" Width="180">
                             <StackPanel>
+                                <materialDesign:PackIcon Kind="ClipboardListOutline" Style="{StaticResource CardIcon}" />
                                 <TextBlock Text="إجمالي الطلبات" Style="{StaticResource CardTitle}" />
                                 <TextBlock Text="{Binding TotalOrders}" Style="{StaticResource CardValue}" />
                             </StackPanel>
                         </Border>
                         <Border Style="{StaticResource Card}" Width="180">
                             <StackPanel>
+                                <materialDesign:PackIcon Kind="CalendarWeekOutline" Style="{StaticResource CardIcon}" />
                                 <TextBlock Text="طلبات آخر 7 أيام" Style="{StaticResource CardTitle}" />
                                 <TextBlock Text="{Binding OrdersLast7Days}" Style="{StaticResource CardValue}" />
                             </StackPanel>
                         </Border>
                         <Border Style="{StaticResource Card}" Width="180">
                             <StackPanel>
+                                <materialDesign:PackIcon Kind="CalendarMonthOutline" Style="{StaticResource CardIcon}" />
                                 <TextBlock Text="طلبات آخر 30 يوم" Style="{StaticResource CardTitle}" />
                                 <TextBlock Text="{Binding OrdersLast30Days}" Style="{StaticResource CardValue}" />
                             </StackPanel>
                         </Border>
-                        <Border Style="{StaticResource Card}" Width="240">
+                        <Border Style="{StaticResource Card}" Width="250">
                             <StackPanel>
+                                <materialDesign:PackIcon Kind="CashMultiple" Style="{StaticResource CardIcon}" Foreground="{StaticResource BrandAccentBrush}" />
                                 <TextBlock Text="إجمالي قيمة الطلبات المؤكدة" Style="{StaticResource CardTitle}" />
                                 <TextBlock Text="{Binding EstimatedConfirmedRevenueText}" Style="{StaticResource CardValue}" FontSize="18" />
-                                <TextBlock Text="تقديري (سعر وقت الطلب، وليس المُحصَّل فعلياً)" FontSize="10" Foreground="#999999" Margin="0,4,0,0" TextWrapping="Wrap" />
+                                <TextBlock Text="تقديري (سعر وقت الطلب، وليس المُحصَّل فعلياً)" Style="{StaticResource CaptionTextStyle}" FontSize="10" Margin="0,4,0,0" TextWrapping="Wrap" />
                             </StackPanel>
                         </Border>
                         <Border Style="{StaticResource Card}" Width="160">
                             <StackPanel>
+                                <materialDesign:PackIcon Kind="StarOutline" Style="{StaticResource CardIcon}" Foreground="{StaticResource StatusPendingBrush}" />
                                 <TextBlock Text="آراء بانتظار الموافقة" Style="{StaticResource CardTitle}" />
                                 <TextBlock Text="{Binding PendingReviewsCount}" Style="{StaticResource CardValue}" />
                             </StackPanel>
                         </Border>
                         <Border Style="{StaticResource Card}" Width="160">
                             <StackPanel>
+                                <materialDesign:PackIcon Kind="PackageVariantClosed" Style="{StaticResource CardIcon}" />
                                 <TextBlock Text="منتجات فعّالة" Style="{StaticResource CardTitle}" />
                                 <TextBlock Text="{Binding ActiveProductsCount}" Style="{StaticResource CardValue}" />
                             </StackPanel>
                         </Border>
                         <Border Style="{StaticResource Card}" Width="160">
                             <StackPanel>
+                                <materialDesign:PackIcon Kind="ShapeOutline" Style="{StaticResource CardIcon}" />
                                 <TextBlock Text="فئات فعّالة" Style="{StaticResource CardTitle}" />
                                 <TextBlock Text="{Binding ActiveCategoriesCount}" Style="{StaticResource CardValue}" />
                             </StackPanel>
@@ -151,33 +152,37 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <StackPanel Grid.Column="1" Margin="0,0,20,0">
-                            <TextBlock Text="توزيع الطلبات حسب الفئة" Style="{StaticResource SectionTitle}" />
-                            <ItemsControl ItemsSource="{Binding CategoryCounts}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <DockPanel Margin="0,0,0,6">
-                                            <TextBlock DockPanel.Dock="Left" Text="{Binding Count}" FontWeight="Bold" />
-                                            <TextBlock Text="{Binding Label}" Margin="0,0,12,0" />
-                                        </DockPanel>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
+                        <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}" Margin="0,0,20,12">
+                            <StackPanel>
+                                <TextBlock Text="توزيع الطلبات حسب الفئة" Style="{StaticResource SectionTitle}" Margin="0,0,0,8" />
+                                <ItemsControl ItemsSource="{Binding CategoryCounts}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <DockPanel Margin="0,0,0,8">
+                                                <TextBlock DockPanel.Dock="Left" Text="{Binding Count}" FontWeight="Bold" Foreground="{StaticResource BrandPrimaryBrush}" />
+                                                <TextBlock Text="{Binding Label}" Margin="0,0,12,0" />
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
 
-                        <StackPanel Grid.Column="0">
-                            <TextBlock Text="توزيع الطلبات حسب طريقة الدفع" Style="{StaticResource SectionTitle}" />
-                            <ItemsControl ItemsSource="{Binding PurchaseMethodCounts}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <DockPanel Margin="0,0,0,6">
-                                            <TextBlock DockPanel.Dock="Left" Text="{Binding Count}" FontWeight="Bold" />
-                                            <TextBlock Text="{Binding Label}" Margin="0,0,12,0" />
-                                        </DockPanel>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
+                        <Border Grid.Column="0" Style="{StaticResource CardBorderStyle}" Margin="0,0,0,12">
+                            <StackPanel>
+                                <TextBlock Text="توزيع الطلبات حسب طريقة الدفع" Style="{StaticResource SectionTitle}" Margin="0,0,0,8" />
+                                <ItemsControl ItemsSource="{Binding PurchaseMethodCounts}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <DockPanel Margin="0,0,0,8">
+                                                <TextBlock DockPanel.Dock="Left" Text="{Binding Count}" FontWeight="Bold" Foreground="{StaticResource BrandPrimaryBrush}" />
+                                                <TextBlock Text="{Binding Label}" Margin="0,0,12,0" />
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
                     </Grid>
 
                     <!-- آخر 10 طلبات -->
@@ -187,8 +192,6 @@
                               IsReadOnly="True"
                               CanUserAddRows="False"
                               HeadersVisibility="Column"
-                              GridLinesVisibility="Horizontal"
-                              RowHeight="36"
                               MaxHeight="320">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="رقم الطلب" Binding="{Binding OrderNumber}" Width="120" />

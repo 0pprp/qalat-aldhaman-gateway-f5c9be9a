@@ -5,23 +5,22 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         mc:Ignorable="d"
         Title="{Binding OrderNumberTitle}"
-        Height="720" Width="520"
+        Height="740" Width="540"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         FlowDirection="RightToLeft"
-        FontFamily="Segoe UI">
+        FontFamily="Segoe UI"
+        Background="{StaticResource BrandBackgroundBrush}">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
-        <Style x:Key="SectionTitle" TargetType="TextBlock">
-            <Setter Property="FontWeight" Value="Bold" />
+        <Style x:Key="SectionTitle" TargetType="TextBlock" BasedOn="{StaticResource SubheaderTextStyle}">
             <Setter Property="FontSize" Value="14" />
             <Setter Property="Margin" Value="0,16,0,8" />
         </Style>
-        <Style x:Key="FieldLabel" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#666666" />
+        <Style x:Key="FieldLabel" TargetType="TextBlock" BasedOn="{StaticResource CaptionTextStyle}">
             <Setter Property="Margin" Value="0,4,0,0" />
         </Style>
-        <Style x:Key="FieldValue" TargetType="TextBlock">
+        <Style x:Key="FieldValue" TargetType="TextBlock" BasedOn="{StaticResource BodyTextStyle}">
             <Setter Property="Margin" Value="0,0,0,8" />
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
@@ -32,18 +31,19 @@
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    FontSize="16"
-                   Foreground="#666" />
+                   Foreground="{StaticResource BrandTextSecondaryBrush}" />
 
         <TextBlock Text="{Binding ErrorMessage}"
                    Visibility="{Binding IsError, Converter={StaticResource BoolToVis}}"
-                   Foreground="#C0392B"
+                   Foreground="{StaticResource DangerBrush}"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    TextWrapping="Wrap"
                    MaxWidth="400" />
 
-        <ScrollViewer Visibility="{Binding IsContentVisible, Converter={StaticResource BoolToVis}}"
-                      VerticalScrollBarVisibility="Auto">
+        <Border Visibility="{Binding IsContentVisible, Converter={StaticResource BoolToVis}}"
+                Style="{StaticResource CardBorderStyle}">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel>
                 <TextBlock Text="بيانات الزبون" Style="{StaticResource SectionTitle}" Margin="0,0,0,8" />
                 <TextBlock Text="الاسم" Style="{StaticResource FieldLabel}" />
@@ -126,7 +126,7 @@
                          Margin="0,0,0,12" />
 
                 <TextBlock Text="{Binding SaveErrorMessage}"
-                           Foreground="#C0392B"
+                           Foreground="{StaticResource DangerBrush}"
                            TextWrapping="Wrap"
                            Margin="0,0,0,8" />
 
@@ -135,11 +135,9 @@
                         IsEnabled="{Binding IsFormEnabled}"
                         Width="120"
                         Height="36"
-                        HorizontalAlignment="Left"
-                        Background="#1F5F5B"
-                        Foreground="White"
-                        BorderThickness="0" />
+                        HorizontalAlignment="Left" />
             </StackPanel>
         </ScrollViewer>
+        </Border>
     </Grid>
 </Window>

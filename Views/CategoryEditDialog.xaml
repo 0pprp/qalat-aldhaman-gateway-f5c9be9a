@@ -5,11 +5,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         mc:Ignorable="d"
         Title="{Binding DialogTitle}"
-        Height="700" Width="460"
+        Height="720" Width="480"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         FlowDirection="RightToLeft"
-        FontFamily="Segoe UI">
+        FontFamily="Segoe UI"
+        Background="{StaticResource BrandBackgroundBrush}">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Window.Resources>
@@ -19,75 +20,78 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
-            <StackPanel IsEnabled="{Binding IsFormEnabled}">
-                <TextBlock Text="اسم الفئة" Margin="0,0,0,4" />
-                <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" />
+        <Border Grid.Row="0" Style="{StaticResource CardBorderStyle}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel IsEnabled="{Binding IsFormEnabled}">
+                    <TextBlock Text="{Binding DialogTitle}" Style="{StaticResource SubheaderTextStyle}" Margin="0,0,0,16" />
 
-                <TextBlock Text="الوصف" Margin="0,0,0,4" />
-                <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                         Padding="6"
-                         Margin="0,0,0,12"
-                         AcceptsReturn="True"
-                         TextWrapping="Wrap"
-                         Height="60"
-                         VerticalScrollBarVisibility="Auto" />
+                    <TextBlock Text="اسم الفئة" Style="{StaticResource FieldLabelTextStyle}" />
+                    <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,12" />
 
-                <TextBlock Text="صورة الفئة" Margin="0,0,0,4" />
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-                    <Border Width="64" Height="64" BorderBrush="#CCCCCC" BorderThickness="1" Margin="0,0,12,0">
-                        <Image Source="{Binding ImagePreview}" Stretch="UniformToFill" />
-                    </Border>
-                    <StackPanel VerticalAlignment="Center">
-                        <Button Content="اختيار صورة" Command="{Binding SelectImageCommand}" Padding="12,6" Width="140" HorizontalAlignment="Left" />
-                        <TextBlock Text="جارِ الرفع..."
-                                   Visibility="{Binding IsUploadingImage, Converter={StaticResource BoolToVis}}"
-                                   FontSize="11"
-                                   Foreground="#666666"
-                                   Margin="0,4,0,0" />
+                    <TextBlock Text="الوصف" Style="{StaticResource FieldLabelTextStyle}" />
+                    <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="0,0,0,12"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             Height="60"
+                             VerticalScrollBarVisibility="Auto" />
+
+                    <TextBlock Text="صورة الفئة" Style="{StaticResource FieldLabelTextStyle}" />
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                        <Border Width="64" Height="64" BorderBrush="{StaticResource BrandBorderBrush}" BorderThickness="1" CornerRadius="6" Margin="0,0,12,0">
+                            <Image Source="{Binding ImagePreview}" Stretch="UniformToFill" />
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <Button Content="اختيار صورة"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    Command="{Binding SelectImageCommand}"
+                                    Width="140"
+                                    HorizontalAlignment="Left" />
+                            <TextBlock Text="جارِ الرفع..."
+                                       Style="{StaticResource CaptionTextStyle}"
+                                       Visibility="{Binding IsUploadingImage, Converter={StaticResource BoolToVis}}"
+                                       Margin="0,4,0,0" />
+                        </StackPanel>
                     </StackPanel>
+
+                    <CheckBox Content="يقبل الدفع نقداً" IsChecked="{Binding AllowsCash}" Margin="0,0,0,8" />
+                    <CheckBox Content="يقبل القسط الشهري" IsChecked="{Binding AllowsMonthlyInstallment}" Margin="0,0,0,8" />
+                    <CheckBox Content="يقبل القسط اليومي" IsChecked="{Binding AllowsDailyInstallment}" Margin="0,0,0,8" />
+                    <CheckBox Content="يشترط أن يكون الزبون صاحب محل" IsChecked="{Binding RequiresShopOwner}" Margin="0,0,0,16" />
+
+                    <StackPanel Visibility="{Binding IsCashInvoiceVisible, Converter={StaticResource BoolToVis}}" Margin="0,0,0,12">
+                        <TextBlock Text="الحد الأدنى للفاتورة (نقد)" Style="{StaticResource FieldLabelTextStyle}" />
+                        <TextBox Text="{Binding MinInvoiceCash, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+
+                    <StackPanel Visibility="{Binding IsInstallmentInvoiceVisible, Converter={StaticResource BoolToVis}}" Margin="0,0,0,12">
+                        <TextBlock Text="الحد الأدنى للفاتورة (قسط)" Style="{StaticResource FieldLabelTextStyle}" />
+                        <TextBox Text="{Binding MinInvoiceInstallment, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+
+                    <CheckBox Content="يحتوي على حقل منتج مخصص (لفئة أخرى)" IsChecked="{Binding HasCustomProductField}" Margin="0,0,0,16" />
+
+                    <TextBlock Text="ترتيب العرض" Style="{StaticResource FieldLabelTextStyle}" />
+                    <TextBox Text="{Binding DisplayOrder, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,16" />
+
+                    <CheckBox Content="فعّالة" IsChecked="{Binding IsActive}" Margin="0,0,0,8" />
+
+                    <TextBlock Text="{Binding ErrorMessage}"
+                               Foreground="{StaticResource DangerBrush}"
+                               TextWrapping="Wrap"
+                               Margin="0,8,0,0" />
                 </StackPanel>
-
-                <CheckBox Content="يقبل الدفع نقداً" IsChecked="{Binding AllowsCash}" Margin="0,0,0,8" />
-                <CheckBox Content="يقبل القسط الشهري" IsChecked="{Binding AllowsMonthlyInstallment}" Margin="0,0,0,8" />
-                <CheckBox Content="يقبل القسط اليومي" IsChecked="{Binding AllowsDailyInstallment}" Margin="0,0,0,8" />
-                <CheckBox Content="يشترط أن يكون الزبون صاحب محل" IsChecked="{Binding RequiresShopOwner}" Margin="0,0,0,16" />
-
-                <StackPanel Visibility="{Binding IsCashInvoiceVisible, Converter={StaticResource BoolToVis}}" Margin="0,0,0,12">
-                    <TextBlock Text="الحد الأدنى للفاتورة (نقد)" Margin="0,0,0,4" />
-                    <TextBox Text="{Binding MinInvoiceCash, UpdateSourceTrigger=PropertyChanged}" Padding="6" />
-                </StackPanel>
-
-                <StackPanel Visibility="{Binding IsInstallmentInvoiceVisible, Converter={StaticResource BoolToVis}}" Margin="0,0,0,12">
-                    <TextBlock Text="الحد الأدنى للفاتورة (قسط)" Margin="0,0,0,4" />
-                    <TextBox Text="{Binding MinInvoiceInstallment, UpdateSourceTrigger=PropertyChanged}" Padding="6" />
-                </StackPanel>
-
-                <CheckBox Content="يحتوي على حقل منتج مخصص (لفئة أخرى)" IsChecked="{Binding HasCustomProductField}" Margin="0,0,0,16" />
-
-                <TextBlock Text="ترتيب العرض" Margin="0,0,0,4" />
-                <TextBox Text="{Binding DisplayOrder, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,16" />
-
-                <CheckBox Content="فعّالة" IsChecked="{Binding IsActive}" Margin="0,0,0,8" />
-
-                <TextBlock Text="{Binding ErrorMessage}"
-                           Foreground="#C0392B"
-                           TextWrapping="Wrap"
-                           Margin="0,8,0,0" />
-            </StackPanel>
-        </ScrollViewer>
+            </ScrollViewer>
+        </Border>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,16,0,0">
             <Button Content="حفظ"
                     Command="{Binding SaveCommand}"
                     IsEnabled="{Binding IsFormEnabled}"
                     Width="100"
-                    Height="36"
-                    Margin="0,0,8,0"
-                    Background="#1F5F5B"
-                    Foreground="White"
-                    BorderThickness="0" />
-            <Button Content="إلغاء" Click="CancelButton_Click" Width="100" Height="36" />
+                    Height="38"
+                    Margin="0,0,8,0" />
+            <Button Content="إلغاء" Style="{StaticResource SecondaryButtonStyle}" Click="CancelButton_Click" Width="100" Height="38" />
         </StackPanel>
     </Grid>
 </Window>
