@@ -146,42 +146,48 @@ const StoreProductDetailContent = () => {
                   </Button>
                 )}
 
-                {product.category.allowsMonthlyInstallment && product.monthlyInstallmentPrice != null && (
-                  <>
+                {product.category.allowsMonthlyInstallment &&
+                  product.monthlyTotalPrice != null &&
+                  product.monthlyPaymentAmount != null && (
+                    <>
+                      <Button asChild size="lg" variant="secondary" className="w-full justify-start gap-3">
+                        <Link to={`/store/order/${product.id}?method=MonthlyInstallment`}>
+                          <CalendarClock className="w-5 h-5" />
+                          <span className={isRTL ? 'font-arabic' : ''}>
+                            {t('قسط شهري', 'Monthly Installment')} — {t('المبلغ الكلي', 'Total')}{' '}
+                            {formatIQD(product.monthlyTotalPrice)} ({t('دفعة شهرية', 'monthly payment')}{' '}
+                            {formatIQD(product.monthlyPaymentAmount)})
+                          </span>
+                        </Link>
+                      </Button>
+
+                      <Button asChild size="lg" variant="outline" className="w-full justify-start gap-3">
+                        <Link to={`/store/order/${product.id}?method=MonthlyRafidain`}>
+                          <Landmark className="w-5 h-5" />
+                          <span className={isRTL ? 'font-arabic' : ''}>
+                            {t('قسط شهري — عبر منصة الرافدين (للموظفين)', 'Monthly Installment — via Al-Rafidain (Employees)')} —{' '}
+                            {t('المبلغ الكلي', 'Total')} {formatIQD(product.monthlyTotalPrice)} ({t('دفعة شهرية', 'monthly payment')}{' '}
+                            {formatIQD(product.monthlyPaymentAmount)})
+                          </span>
+                        </Link>
+                      </Button>
+                    </>
+                  )}
+
+                {product.category.allowsDailyInstallment &&
+                  product.dailyTotalPrice != null &&
+                  product.dailyPaymentAmount != null && (
                     <Button asChild size="lg" variant="secondary" className="w-full justify-start gap-3">
-                      <Link to={`/store/order/${product.id}?method=MonthlyInstallment`}>
-                        <CalendarClock className="w-5 h-5" />
+                      <Link to={`/store/order/${product.id}?method=DailyInstallment`}>
+                        <CalendarDays className="w-5 h-5" />
                         <span className={isRTL ? 'font-arabic' : ''}>
-                          {t('قسط شهري', 'Monthly Installment')} — {formatIQD(product.monthlyInstallmentPrice)}
-                          {t('/شهرياً', '/month')}
+                          {t('قسط يومي', 'Daily Installment')} — {t('المبلغ الكلي', 'Total')}{' '}
+                          {formatIQD(product.dailyTotalPrice)} ({t('دفعة يومية', 'daily payment')}{' '}
+                          {formatIQD(product.dailyPaymentAmount)})
                         </span>
                       </Link>
                     </Button>
-
-                    <Button asChild size="lg" variant="outline" className="w-full justify-start gap-3">
-                      <Link to={`/store/order/${product.id}?method=MonthlyRafidain`}>
-                        <Landmark className="w-5 h-5" />
-                        <span className={isRTL ? 'font-arabic' : ''}>
-                          {t('قسط شهري — عبر منصة الرافدين (للموظفين)', 'Monthly Installment — via Al-Rafidain (Employees)')} —{' '}
-                          {formatIQD(product.monthlyInstallmentPrice)}
-                          {t('/شهرياً', '/month')}
-                        </span>
-                      </Link>
-                    </Button>
-                  </>
-                )}
-
-                {product.category.allowsDailyInstallment && product.dailyInstallmentPrice != null && (
-                  <Button asChild size="lg" variant="secondary" className="w-full justify-start gap-3">
-                    <Link to={`/store/order/${product.id}?method=DailyInstallment`}>
-                      <CalendarDays className="w-5 h-5" />
-                      <span className={isRTL ? 'font-arabic' : ''}>
-                        {t('قسط يومي', 'Daily Installment')} — {formatIQD(product.dailyInstallmentPrice)}
-                        {t('/يومياً', '/day')}
-                      </span>
-                    </Link>
-                  </Button>
-                )}
+                  )}
               </div>
 
               {product.contractPdfUrl && (

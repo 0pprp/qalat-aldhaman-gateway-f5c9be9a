@@ -12,7 +12,8 @@ import { formatIQD } from '@/lib/utils';
 import type { ProductListItem } from '@/types/store';
 
 function getStartingPrice(product: ProductListItem): number | null {
-  const prices = [product.cashPrice, product.monthlyInstallmentPrice, product.dailyInstallmentPrice].filter(
+  // "يبدأ من" يقارن بالمبالغ الكلية فقط (وليس الدفعات الدورية الصغيرة) كي يعكس قيمة المنتج الحقيقية.
+  const prices = [product.cashPrice, product.monthlyTotalPrice, product.dailyTotalPrice].filter(
     (price): price is number => price !== null && price !== undefined,
   );
   return prices.length > 0 ? Math.min(...prices) : null;

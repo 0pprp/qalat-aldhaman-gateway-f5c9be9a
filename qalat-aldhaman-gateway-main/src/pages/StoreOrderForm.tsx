@@ -97,18 +97,25 @@ const StoreOrderFormContent = () => {
     if (matched) setGovernorateId(matched.id);
   }, [profile, governorates]);
 
-  const priceForMethod = !product || !method
+  const totalForMethod = !product || !method
     ? null
     : method === 'Cash'
       ? product.cashPrice
       : method === 'DailyInstallment'
-        ? product.dailyInstallmentPrice
-        : product.monthlyInstallmentPrice;
+        ? product.dailyTotalPrice
+        : product.monthlyTotalPrice;
+
+  const paymentForMethod = !product || !method || method === 'Cash'
+    ? null
+    : method === 'DailyInstallment'
+      ? product.dailyPaymentAmount
+      : product.monthlyPaymentAmount;
 
   const methodAllowed =
     !!product &&
     !!method &&
-    priceForMethod != null &&
+    totalForMethod != null &&
+    (method === 'Cash' || paymentForMethod != null) &&
     ((method === 'Cash' && product.category.allowsCash) ||
       ((method === 'MonthlyInstallment' || method === 'MonthlyRafidain') && product.category.allowsMonthlyInstallment) ||
       (method === 'DailyInstallment' && product.category.allowsDailyInstallment));
@@ -340,12 +347,17 @@ const StoreOrderFormContent = () => {
                 <div className="rounded-2xl bg-card border border-border p-5 mb-6 text-center">
                   <h1 className={`text-lg font-bold text-foreground mb-1 ${isRTL ? 'font-arabic' : ''}`}>{product.name}</h1>
                   <p className={`text-sm text-muted-foreground ${isRTL ? 'font-arabic' : ''}`}>
-                    {methodLabels[method]} — {priceForMethod != null && formatIQD(priceForMethod)}
-                    {method === 'DailyInstallment'
-                      ? t('/يومياً', '/day')
-                      : method === 'MonthlyInstallment' || method === 'MonthlyRafidain'
-                        ? t('/شهرياً', '/month')
-                        : ''}
+                    {methodLabels[method]} —{' '}
+                    {method === 'Cash'
+                      ? totalForMethod != null && formatIQD(totalForMethod)
+                      : totalForMethod != null &&
+                        paymentForMethod != null && (
+                          <>
+                            {t('المبلغ الكلي', 'Total')} {formatIQD(totalForMethod)} (
+                            {method === 'DailyInstallment' ? t('دفعة يومية', 'daily payment') : t('دفعة شهرية', 'monthly payment')}{' '}
+                            {formatIQD(paymentForMethod)})
+                          </>
+                        )}
                   </p>
                 </div>
 

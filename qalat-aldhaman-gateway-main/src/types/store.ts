@@ -13,8 +13,10 @@ export interface ProductListItem {
   id: number;
   name: string;
   cashPrice: number | null;
-  monthlyInstallmentPrice: number | null;
-  dailyInstallmentPrice: number | null;
+  monthlyTotalPrice: number | null;
+  monthlyPaymentAmount: number | null;
+  dailyTotalPrice: number | null;
+  dailyPaymentAmount: number | null;
   imageUrl: string | null;
 }
 
@@ -42,8 +44,10 @@ export interface ProductDetail {
   name: string;
   description: string | null;
   cashPrice: number | null;
-  monthlyInstallmentPrice: number | null;
-  dailyInstallmentPrice: number | null;
+  monthlyTotalPrice: number | null;
+  monthlyPaymentAmount: number | null;
+  dailyTotalPrice: number | null;
+  dailyPaymentAmount: number | null;
   contractPdfUrl: string | null;
   images: ProductImage[];
   category: CategoryDetail;
