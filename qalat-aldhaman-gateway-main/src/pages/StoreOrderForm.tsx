@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
 import {
   ArrowLeft,
   ArrowRight,
@@ -14,9 +15,9 @@ import {
 } from 'lucide-react';
 import { LanguageProvider, useLanguage } from '@/contexts/LanguageContext';
 import Header from '@/components/landing/Header';
-import Footer from '@/components/landing/Footer';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
+import StorePageBackground from '@/components/store/StorePageBackground';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -263,7 +264,8 @@ const StoreOrderFormContent = () => {
   const backToProductLink = productId ? `/store/product/${productId}` : '/store';
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative">
+      <StorePageBackground />
       <Header />
       <main className="pt-32 pb-24 min-h-[60vh] section-container">
         <div className="flex items-center justify-between mb-4">
@@ -311,7 +313,12 @@ const StoreOrderFormContent = () => {
         {!isProductLoading && !isProductError && product && methodAllowed && method && (
           <>
             {orderMutation.isSuccess ? (
-              <div className="text-center py-16 max-w-lg mx-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
+                className="text-center py-16 max-w-lg mx-auto"
+              >
                 <CheckCircle2 className="w-16 h-16 text-primary mx-auto mb-4" />
                 <h2 className={`text-2xl font-bold text-foreground mb-2 ${isRTL ? 'font-arabic' : ''}`}>
                   {t('تم استلام طلبك بنجاح', 'Your order was received successfully')}
@@ -341,10 +348,15 @@ const StoreOrderFormContent = () => {
                     {t('العودة للمتجر', 'Back to Store')}
                   </Link>
                 </div>
-              </div>
+              </motion.div>
             ) : (
-              <div className="max-w-xl mx-auto">
-                <div className="rounded-2xl bg-card border border-border p-5 mb-6 text-center">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
+                className="max-w-xl mx-auto"
+              >
+                <div className="rounded-2xl bg-card border border-primary/20 shadow-[0_10px_30px_-8px_rgba(15,91,87,0.25)] p-5 mb-6 text-center">
                   <h1 className={`text-lg font-bold text-foreground mb-1 ${isRTL ? 'font-arabic' : ''}`}>{product.name}</h1>
                   <p className={`text-sm text-muted-foreground ${isRTL ? 'font-arabic' : ''}`}>
                     {methodLabels[method]} —{' '}
@@ -562,12 +574,11 @@ const StoreOrderFormContent = () => {
                     {t('تأكيد الطلب', 'Confirm Order')}
                   </Button>
                 </form>
-              </div>
+              </motion.div>
             )}
           </>
         )}
       </main>
-      <Footer />
     </div>
   );
 };

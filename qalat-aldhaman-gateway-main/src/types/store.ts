@@ -84,3 +84,14 @@ export interface CreateOrderResponse {
   status: OrderStatus;
   contractPdfUrl: string | null;
 }
+
+export interface OrderLookupResult {
+  orderNumber: string;
+  productName: string;
+  purchaseMethod: PurchaseMethod;
+  totalPriceSnapshot: number;
+  installmentPaymentAmountSnapshot: number | null;
+  status: OrderStatus;
+  createdAt: string;
+  contractPdfUrl: string | null;
+}

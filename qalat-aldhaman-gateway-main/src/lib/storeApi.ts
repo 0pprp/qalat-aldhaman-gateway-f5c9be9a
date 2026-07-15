@@ -4,6 +4,7 @@ import type {
   CreateOrderRequest,
   CreateOrderResponse,
   Governorate,
+  OrderLookupResult,
   ProductDetail,
   ProductListItem,
 } from '@/types/store';
@@ -19,3 +20,6 @@ export const fetchGovernorates = () => apiFetch<Governorate[]>('/api/governorate
 
 export const createOrder = (payload: CreateOrderRequest) =>
   apiFetch<CreateOrderResponse>('/api/orders', { method: 'POST', body: payload });
+
+export const fetchOrdersByPhone = (phone: string) =>
+  apiFetch<OrderLookupResult[]>(`/api/orders/lookup?phone=${encodeURIComponent(phone)}`);

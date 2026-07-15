@@ -139,6 +139,10 @@
     background: var(--gradient-gold);
   }
 
+  .bg-page-gradient {
+    background: linear-gradient(180deg, #F7F9F8 0%, #E8F3F1 100%);
+  }
+
   .shadow-card {
     box-shadow: var(--shadow-md);
   }

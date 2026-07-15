@@ -107,24 +107,23 @@ const Hero = () => {
           )}
         </motion.p>
 
-      </div>
-
-      <div className="section-container absolute left-1/2 bottom-6 sm:bottom-7 md:bottom-8 lg:bottom-9 xl:bottom-0 w-full -translate-x-1/2 translate-y-0 xl:translate-y-[6%] 2xl:translate-y-[8%] z-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.12, ease: 'easeOut' }}
-          className="flex justify-center mb-4 sm:mb-5"
+          transition={{ duration: 0.6, delay: 0.3, ease: 'easeOut' }}
+          className="flex justify-center mt-10 sm:mt-12"
         >
           <Link
             to="/store"
-            className={`group inline-flex items-center gap-2.5 px-7 sm:px-8 py-3.5 rounded-xl bg-primary text-primary-foreground font-bold text-base sm:text-lg shadow-[0_18px_38px_rgba(47,143,131,0.35)] transition-all duration-300 hover:-translate-y-1 hover:bg-primary/90 hover:shadow-[0_22px_46px_rgba(47,143,131,0.42)] ${isRTL ? 'font-arabic' : ''}`}
+            className={`group inline-flex items-center gap-3 px-9 sm:px-11 py-4 sm:py-5 rounded-2xl bg-primary text-primary-foreground font-bold text-lg sm:text-xl shadow-[0_18px_38px_rgba(47,143,131,0.35)] transition-all duration-300 hover:-translate-y-1 hover:bg-primary/90 hover:shadow-[0_22px_46px_rgba(47,143,131,0.42)] ${isRTL ? 'font-arabic' : ''}`}
           >
-            <ShoppingBag className="w-5 h-5" />
+            <ShoppingBag className="w-6 h-6" />
             <span>{t('تصفح المتجر', 'Browse Store')}</span>
           </Link>
         </motion.div>
+      </div>
 
+      <div className="section-container absolute left-1/2 bottom-6 sm:bottom-7 md:bottom-8 lg:bottom-9 xl:bottom-0 w-full -translate-x-1/2 translate-y-0 xl:translate-y-[6%] 2xl:translate-y-[8%] z-20">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 md:gap-3 lg:gap-4 xl:gap-5">
           {cards.map((card, index) => {
             const IconComp = card.Icon;

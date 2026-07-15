@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
 import {
   ArrowLeft,
   ArrowRight,
@@ -14,9 +15,9 @@ import {
 } from 'lucide-react';
 import { LanguageProvider, useLanguage } from '@/contexts/LanguageContext';
 import Header from '@/components/landing/Header';
-import Footer from '@/components/landing/Footer';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
+import StorePageBackground from '@/components/store/StorePageBackground';
 import { fetchProductDetail } from '@/lib/storeApi';
 import { resolveMediaUrl } from '@/lib/api';
 import { formatIQD } from '@/lib/utils';
@@ -41,7 +42,8 @@ const StoreProductDetailContent = () => {
   });
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative">
+      <StorePageBackground />
       <Header />
       <main className="pt-32 pb-24 min-h-[60vh] section-container">
         <div className="flex items-center justify-between mb-4">
@@ -80,9 +82,14 @@ const StoreProductDetailContent = () => {
         )}
 
         {!isLoading && !isError && product && (
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-12 max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+            className="grid md:grid-cols-2 gap-8 lg:gap-12 max-w-5xl mx-auto"
+          >
             <div>
-              <div className="aspect-square bg-muted rounded-2xl overflow-hidden flex items-center justify-center border border-border">
+              <div className="aspect-square bg-muted rounded-2xl overflow-hidden flex items-center justify-center border border-primary/20 shadow-[0_10px_30px_-8px_rgba(15,91,87,0.25)]">
                 {product.images.length > 0 ? (
                   <img
                     src={resolveMediaUrl(product.images[selectedImageIndex]?.imageUrl ?? product.images[0].imageUrl)}
@@ -95,7 +102,7 @@ const StoreProductDetailContent = () => {
               </div>
 
               {product.images.length > 1 && (
-                <div className="grid grid-cols-5 gap-2 mt-3">
+                <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 mt-3">
                   {product.images.map((image, index) => (
                     <button
                       key={image.id}
@@ -202,10 +209,9 @@ const StoreProductDetailContent = () => {
                 </a>
               )}
             </div>
-          </div>
+          </motion.div>
         )}
       </main>
-      <Footer />
     </div>
   );
 };
