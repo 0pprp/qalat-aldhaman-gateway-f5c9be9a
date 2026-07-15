@@ -1,0 +1,113 @@
+<Window x:Class="QalatAldhaman.Store.Admin.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QalatAldhaman.Store.Admin"
+        xmlns:views="clr-namespace:QalatAldhaman.Store.Admin.Views"
+        xmlns:vm="clr-namespace:QalatAldhaman.Store.Admin.ViewModels"
+        mc:Ignorable="d"
+        Title="لوحة تحكم قلعة الضمان" Height="600" Width="1000"
+        FlowDirection="RightToLeft"
+        FontFamily="Segoe UI"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <!--
+            نمط التنقل: ContentControl وحيد بمنطقة المحتوى، محتواه (Content) مربوط بـ CurrentViewModel
+            بالـ MainViewModel. كل DataTemplate هنا يربط نوع ViewModel بالـ View المطابقة له — WPF يختار
+            القالب المناسب تلقائياً حسب نوع الكائن الحالي فيضبط DataContext للـ View ضمنياً (بدون حاجة
+            لأي كود يدوي بـ code-behind). هذا يضمن عرض شاشة واحدة فقط بكل لحظة، بدون أي تراكب بين الشاشات
+            (المشكلة السابقة كانت عدة UserControl متراكبة بنفس الحاوية بخاصية Visibility بدل حاوية واحدة).
+        -->
+        <DataTemplate DataType="{x:Type vm:CategoriesViewModel}">
+            <views:CategoriesView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ProductsViewModel}">
+            <views:ProductsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:OrdersViewModel}">
+            <views:OrdersView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ReviewsViewModel}">
+            <views:ReviewsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ContractsViewModel}">
+            <views:ContractsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
+            <views:DashboardView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:PlaceholderViewModel}">
+            <TextBlock FontSize="20"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Foreground="#333333">
+                <Run Text="صفحة: " />
+                <Run Text="{Binding Title, Mode=OneWay}" FontWeight="Bold" />
+                <Run Text=" (قيد الإنشاء)" />
+            </TextBlock>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar -->
+        <Border Grid.Column="0" Background="#1F5F5B">
+            <Grid Margin="0,24,0,16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Text="قلعة الضمان"
+                           Foreground="White"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,4" />
+
+                <TextBlock Grid.Row="1"
+                           Text="{Binding FullName}"
+                           Foreground="#B7D8D3"
+                           FontSize="13"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,20" />
+
+                <ListBox Grid.Row="2"
+                         ItemsSource="{Binding NavItems}"
+                         SelectedItem="{Binding SelectedNavItem, Mode=TwoWay}"
+                         Background="Transparent"
+                         BorderThickness="0">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Padding" Value="16,12" />
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="FontSize" Value="15" />
+                            <Setter Property="HorizontalContentAlignment" Value="Right" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+
+                <Button Grid.Row="3"
+                        Content="تسجيل خروج"
+                        Command="{Binding LogoutCommand}"
+                        Margin="16,0,16,0"
+                        Height="36"
+                        Background="#17403D"
+                        Foreground="White"
+                        BorderThickness="0" />
+            </Grid>
+        </Border>
+
+        <!-- Content area: عنصر واحد فقط يُعرض بكل لحظة -->
+        <Border Grid.Column="1" Background="#F5FAF8">
+            <ContentControl Content="{Binding CurrentViewModel}" Focusable="False" />
+        </Border>
+    </Grid>
+</Window>

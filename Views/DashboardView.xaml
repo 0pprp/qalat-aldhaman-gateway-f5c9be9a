@@ -1,0 +1,222 @@
+<UserControl x:Class="QalatAldhaman.Store.Admin.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             FontFamily="Segoe UI">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderBrush" Value="#DDDDDD" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Margin" Value="0,0,12,12" />
+        </Style>
+        <Style x:Key="CardTitle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#666666" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Margin" Value="0,0,0,6" />
+        </Style>
+        <Style x:Key="CardValue" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+        <Style x:Key="SectionTitle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Margin" Value="0,8,0,12" />
+        </Style>
+    </UserControl.Resources>
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0" Margin="0,0,0,16">
+            <TextBlock DockPanel.Dock="Right"
+                       Text="الإحصائيات"
+                       FontSize="22"
+                       FontWeight="Bold"
+                       VerticalAlignment="Center" />
+            <Button DockPanel.Dock="Left"
+                    Content="تحديث"
+                    Command="{Binding LoadCommand}"
+                    Padding="16,8"
+                    Background="#1F5F5B"
+                    Foreground="White"
+                    BorderThickness="0" />
+        </DockPanel>
+
+        <Grid Grid.Row="1">
+            <TextBlock Text="جارِ التحميل..."
+                       Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontSize="16"
+                       Foreground="#666" />
+
+            <StackPanel Visibility="{Binding IsError, Converter={StaticResource BoolToVis}}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                <TextBlock Text="{Binding ErrorMessage}"
+                           Foreground="#C0392B"
+                           Margin="0,0,0,12"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"
+                           MaxWidth="400" />
+                <Button Content="إعادة المحاولة"
+                        Command="{Binding LoadCommand}"
+                        Padding="16,8"
+                        HorizontalAlignment="Center" />
+            </StackPanel>
+
+            <ScrollViewer Visibility="{Binding IsContentVisible, Converter={StaticResource BoolToVis}}"
+                          VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <!-- بطاقات علوية: الإجمالي + آخر 7/30 يوم + القيمة التقديرية -->
+                    <WrapPanel Orientation="Horizontal">
+                        <Border Style="{StaticResource Card}" Width="180">
+                            <StackPanel>
+                                <TextBlock Text="إجمالي الطلبات" Style="{StaticResource CardTitle}" />
+                                <TextBlock Text="{Binding TotalOrders}" Style="{StaticResource CardValue}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}" Width="180">
+                            <StackPanel>
+                                <TextBlock Text="طلبات آخر 7 أيام" Style="{StaticResource CardTitle}" />
+                                <TextBlock Text="{Binding OrdersLast7Days}" Style="{StaticResource CardValue}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}" Width="180">
+                            <StackPanel>
+                                <TextBlock Text="طلبات آخر 30 يوم" Style="{StaticResource CardTitle}" />
+                                <TextBlock Text="{Binding OrdersLast30Days}" Style="{StaticResource CardValue}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}" Width="240">
+                            <StackPanel>
+                                <TextBlock Text="إجمالي قيمة الطلبات المؤكدة" Style="{StaticResource CardTitle}" />
+                                <TextBlock Text="{Binding EstimatedConfirmedRevenueText}" Style="{StaticResource CardValue}" FontSize="18" />
+                                <TextBlock Text="تقديري (سعر وقت الطلب، وليس المُحصَّل فعلياً)" FontSize="10" Foreground="#999999" Margin="0,4,0,0" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}" Width="160">
+                            <StackPanel>
+                                <TextBlock Text="آراء بانتظار الموافقة" Style="{StaticResource CardTitle}" />
+                                <TextBlock Text="{Binding PendingReviewsCount}" Style="{StaticResource CardValue}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}" Width="160">
+                            <StackPanel>
+                                <TextBlock Text="منتجات فعّالة" Style="{StaticResource CardTitle}" />
+                                <TextBlock Text="{Binding ActiveProductsCount}" Style="{StaticResource CardValue}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}" Width="160">
+                            <StackPanel>
+                                <TextBlock Text="فئات فعّالة" Style="{StaticResource CardTitle}" />
+                                <TextBlock Text="{Binding ActiveCategoriesCount}" Style="{StaticResource CardValue}" />
+                            </StackPanel>
+                        </Border>
+                    </WrapPanel>
+
+                    <!-- بطاقات الحالات -->
+                    <TextBlock Text="الطلبات حسب الحالة" Style="{StaticResource SectionTitle}" />
+                    <ItemsControl ItemsSource="{Binding StatusCounts}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource Card}" Width="150">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Label}" Style="{StaticResource CardTitle}" />
+                                        <TextBlock Text="{Binding Count}" Style="{StaticResource CardValue}" Foreground="{Binding Color}" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- توزيعات -->
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="1" Margin="0,0,20,0">
+                            <TextBlock Text="توزيع الطلبات حسب الفئة" Style="{StaticResource SectionTitle}" />
+                            <ItemsControl ItemsSource="{Binding CategoryCounts}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <DockPanel Margin="0,0,0,6">
+                                            <TextBlock DockPanel.Dock="Left" Text="{Binding Count}" FontWeight="Bold" />
+                                            <TextBlock Text="{Binding Label}" Margin="0,0,12,0" />
+                                        </DockPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="توزيع الطلبات حسب طريقة الدفع" Style="{StaticResource SectionTitle}" />
+                            <ItemsControl ItemsSource="{Binding PurchaseMethodCounts}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <DockPanel Margin="0,0,0,6">
+                                            <TextBlock DockPanel.Dock="Left" Text="{Binding Count}" FontWeight="Bold" />
+                                            <TextBlock Text="{Binding Label}" Margin="0,0,12,0" />
+                                        </DockPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- آخر 10 طلبات -->
+                    <TextBlock Text="آخر 10 طلبات" Style="{StaticResource SectionTitle}" />
+                    <DataGrid ItemsSource="{Binding RecentOrders}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"
+                              HeadersVisibility="Column"
+                              GridLinesVisibility="Horizontal"
+                              RowHeight="36"
+                              MaxHeight="320">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="رقم الطلب" Binding="{Binding OrderNumber}" Width="120" />
+                            <DataGridTextColumn Header="الزبون" Binding="{Binding CustomerName}" Width="140" />
+                            <DataGridTextColumn Header="المنتج" Binding="{Binding ProductName}" Width="*" />
+                            <DataGridTemplateColumn Header="الحالة" Width="130">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding StatusText}" Foreground="{Binding StatusColor}" FontWeight="Bold" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="التاريخ" Binding="{Binding CreatedAtText}" Width="140" />
+                            <DataGridTemplateColumn Header="" Width="90">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="تفاصيل"
+                                                Margin="4,2"
+                                                Padding="10,4"
+                                                Command="{Binding DataContext.OpenOrderCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>

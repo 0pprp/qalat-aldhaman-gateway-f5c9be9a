@@ -1,0 +1,109 @@
+<UserControl x:Class="QalatAldhaman.Store.Admin.Views.ProductsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             FontFamily="Segoe UI">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </UserControl.Resources>
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0" Margin="0,0,0,16">
+            <TextBlock DockPanel.Dock="Right"
+                       Text="المنتجات"
+                       FontSize="22"
+                       FontWeight="Bold"
+                       VerticalAlignment="Center" />
+            <Button DockPanel.Dock="Left"
+                    Content="+ إضافة منتج جديد"
+                    Command="{Binding AddProductCommand}"
+                    Padding="16,8"
+                    Background="#1F5F5B"
+                    Foreground="White"
+                    BorderThickness="0" />
+        </DockPanel>
+
+        <DockPanel Grid.Row="1" Margin="0,0,0,16">
+            <TextBlock DockPanel.Dock="Right" Text="فلترة حسب الفئة:" VerticalAlignment="Center" Margin="0,0,8,0" />
+            <ComboBox DockPanel.Dock="Right"
+                      Width="220"
+                      ItemsSource="{Binding Categories}"
+                      DisplayMemberPath="Name"
+                      SelectedItem="{Binding SelectedCategoryFilter, Mode=TwoWay}" />
+        </DockPanel>
+
+        <Grid Grid.Row="2">
+            <TextBlock Text="جارِ التحميل..."
+                       Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontSize="16"
+                       Foreground="#666" />
+
+            <StackPanel Visibility="{Binding IsError, Converter={StaticResource BoolToVis}}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                <TextBlock Text="{Binding ErrorMessage}"
+                           Foreground="#C0392B"
+                           Margin="0,0,0,12"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"
+                           MaxWidth="400" />
+                <Button Content="إعادة المحاولة"
+                        Command="{Binding LoadCommand}"
+                        Padding="16,8"
+                        HorizontalAlignment="Center" />
+            </StackPanel>
+
+            <TextBlock Text="لا توجد منتجات بعد"
+                       Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVis}}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontSize="16"
+                       Foreground="#888" />
+
+            <DataGrid ItemsSource="{Binding Products}"
+                      Visibility="{Binding HasProducts, Converter={StaticResource BoolToVis}}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      CanUserAddRows="False"
+                      HeadersVisibility="Column"
+                      GridLinesVisibility="Horizontal"
+                      RowHeight="40">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="اسم الموديل" Binding="{Binding Name}" Width="*" />
+                    <DataGridTextColumn Header="الفئة" Binding="{Binding CategoryName}" Width="120" />
+                    <DataGridTextColumn Header="نقد" Binding="{Binding CashPriceText}" Width="90" />
+                    <DataGridTextColumn Header="شهري" Binding="{Binding MonthlyPriceText}" Width="160" />
+                    <DataGridTextColumn Header="يومي" Binding="{Binding DailyPriceText}" Width="160" />
+                    <DataGridTextColumn Header="الحالة" Binding="{Binding StatusText}" Width="80" />
+                    <DataGridTemplateColumn Header="إجراءات" Width="170">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="تعديل"
+                                            Margin="4,2"
+                                            Padding="10,4"
+                                            Command="{Binding DataContext.EditProductCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                            CommandParameter="{Binding}" />
+                                    <Button Content="حذف"
+                                            Margin="4,2"
+                                            Padding="10,4"
+                                            Command="{Binding DataContext.DeleteProductCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                            CommandParameter="{Binding}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</UserControl>

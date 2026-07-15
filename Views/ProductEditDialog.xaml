@@ -1,0 +1,160 @@
+<Window x:Class="QalatAldhaman.Store.Admin.Views.ProductEditDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d"
+        Title="{Binding DialogTitle}"
+        Height="820" Width="540"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        FlowDirection="RightToLeft"
+        FontFamily="Segoe UI">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Window.Resources>
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+            <StackPanel IsEnabled="{Binding IsFormEnabled}">
+                <TextBlock Text="الفئة" Margin="0,0,0,4" />
+                <ComboBox ItemsSource="{Binding AvailableCategories}"
+                          DisplayMemberPath="Name"
+                          SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
+                          Padding="6"
+                          Margin="0,0,0,12" />
+
+                <TextBlock Text="اسم الموديل" Margin="0,0,0,4" />
+                <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" />
+
+                <TextBlock Text="الوصف" Margin="0,0,0,4" />
+                <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                         Padding="6"
+                         Margin="0,0,0,12"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"
+                         Height="60"
+                         VerticalScrollBarVisibility="Auto" />
+
+                <TextBlock Text="السعر نقداً" Margin="0,0,0,4" />
+                <TextBox Text="{Binding CashPrice, UpdateSourceTrigger=PropertyChanged}"
+                         IsEnabled="{Binding IsCashPriceEnabled}"
+                         Padding="6" Margin="0,0,0,12" />
+
+                <TextBlock Text="القسط الشهري" FontWeight="Bold" Margin="0,4,0,4" />
+                <Grid Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="12" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="المبلغ الكلي" FontSize="11" Foreground="#666" Margin="0,0,0,4" />
+                        <TextBox Text="{Binding MonthlyTotalPrice, UpdateSourceTrigger=PropertyChanged}"
+                                 IsEnabled="{Binding IsMonthlyPriceEnabled}"
+                                 Padding="6" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="الدفعة الشهرية" FontSize="11" Foreground="#666" Margin="0,0,0,4" />
+                        <TextBox Text="{Binding MonthlyPaymentAmount, UpdateSourceTrigger=PropertyChanged}"
+                                 IsEnabled="{Binding IsMonthlyPriceEnabled}"
+                                 Padding="6" />
+                    </StackPanel>
+                </Grid>
+
+                <TextBlock Text="القسط اليومي" FontWeight="Bold" Margin="0,4,0,4" />
+                <Grid Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="12" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="المبلغ الكلي" FontSize="11" Foreground="#666" Margin="0,0,0,4" />
+                        <TextBox Text="{Binding DailyTotalPrice, UpdateSourceTrigger=PropertyChanged}"
+                                 IsEnabled="{Binding IsDailyPriceEnabled}"
+                                 Padding="6" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="الدفعة اليومية" FontSize="11" Foreground="#666" Margin="0,0,0,4" />
+                        <TextBox Text="{Binding DailyPaymentAmount, UpdateSourceTrigger=PropertyChanged}"
+                                 IsEnabled="{Binding IsDailyPriceEnabled}"
+                                 Padding="6" />
+                    </StackPanel>
+                </Grid>
+
+                <TextBlock Text="SKU" Margin="0,0,0,4" />
+                <TextBox Text="{Binding SKU, UpdateSourceTrigger=PropertyChanged}" Padding="6" Margin="0,0,0,12" />
+
+                <CheckBox Content="فعّال" IsChecked="{Binding IsActive}" Margin="0,0,0,16" />
+
+                <TextBlock Text="{Binding ErrorMessage}"
+                           Foreground="#C0392B"
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,12" />
+
+                <Separator Margin="0,0,0,12" />
+
+                <TextBlock Text="الصور" FontWeight="Bold" Margin="0,0,0,4" />
+                <TextBlock Text="{Binding ImagesSectionNote}"
+                           Foreground="#888"
+                           FontSize="11"
+                           Margin="0,0,0,8" />
+
+                <StackPanel IsEnabled="{Binding IsImagesSectionEnabled}">
+                    <ItemsControl ItemsSource="{Binding Images}" Margin="0,0,0,8">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,0,8,8">
+                                    <Border Width="72" Height="72" BorderBrush="#CCCCCC" BorderThickness="1">
+                                        <Image Source="{Binding ResolvedUrl}" Stretch="UniformToFill" />
+                                    </Border>
+                                    <Button Content="✕"
+                                            Width="20" Height="20"
+                                            Padding="0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            Command="{Binding DataContext.RemoveImageCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            CommandParameter="{Binding}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <Button Content="+ إضافة صورة"
+                            Command="{Binding AddImageCommand}"
+                            Padding="12,6"
+                            Width="140"
+                            HorizontalAlignment="Left" />
+                    <TextBlock Text="جارِ الرفع..."
+                               Visibility="{Binding IsUploadingImage, Converter={StaticResource BoolToVis}}"
+                               FontSize="11"
+                               Foreground="#666666"
+                               Margin="0,4,0,0" />
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,16,0,0">
+            <Button Content="حفظ"
+                    Command="{Binding SaveCommand}"
+                    IsEnabled="{Binding IsFormEnabled}"
+                    Width="100"
+                    Height="36"
+                    Margin="0,0,8,0"
+                    Background="#1F5F5B"
+                    Foreground="White"
+                    BorderThickness="0" />
+            <Button Content="إغلاق" Click="CloseButton_Click" Width="100" Height="36" />
+        </StackPanel>
+    </Grid>
+</Window>
