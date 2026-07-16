@@ -15,32 +15,64 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0"
-                   Text="الطلبات"
-                   Style="{StaticResource HeaderTextStyle}"
-                   Margin="0,0,0,16" />
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,16">
-            <TextBlock Text="الحالة:" VerticalAlignment="Center" Margin="0,0,8,0" />
-            <ComboBox Width="170"
-                      Margin="0,0,20,0"
-                      ItemsSource="{Binding StatusOptions}"
-                      DisplayMemberPath="Label"
-                      SelectedItem="{Binding SelectedStatusFilter, Mode=TwoWay}" />
+            <TextBlock Grid.Column="0"
+                       Text="الطلبات"
+                       Style="{StaticResource HeaderTextStyle}"
+                       VerticalAlignment="Center" />
 
-            <TextBlock Text="الفئة:" VerticalAlignment="Center" Margin="0,0,8,0" />
-            <ComboBox Width="170"
-                      Margin="0,0,20,0"
-                      ItemsSource="{Binding Categories}"
-                      DisplayMemberPath="Name"
-                      SelectedItem="{Binding SelectedCategoryFilter, Mode=TwoWay}" />
+            <Button Grid.Column="1"
+                    Content="تصدير إلى Excel"
+                    Command="{Binding ExportToExcelCommand}"
+                    Padding="16,9" />
+        </Grid>
 
-            <TextBlock Text="طريقة الدفع:" VerticalAlignment="Center" Margin="0,0,8,0" />
-            <ComboBox Width="170"
-                      ItemsSource="{Binding PurchaseMethodOptions}"
-                      DisplayMemberPath="Label"
-                      SelectedItem="{Binding SelectedPurchaseMethodFilter, Mode=TwoWay}" />
-        </StackPanel>
+        <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}" Margin="0,0,0,16">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Margin="0,0,24,0">
+                    <TextBlock Text="الحالة" Style="{StaticResource FieldLabelTextStyle}" />
+                    <ComboBox Width="170"
+                              ItemsSource="{Binding StatusOptions}"
+                              DisplayMemberPath="Label"
+                              SelectedItem="{Binding SelectedStatusFilter, Mode=TwoWay}" />
+                </StackPanel>
+
+                <StackPanel Margin="0,0,24,0">
+                    <TextBlock Text="الفئة" Style="{StaticResource FieldLabelTextStyle}" />
+                    <ComboBox Width="170"
+                              ItemsSource="{Binding Categories}"
+                              DisplayMemberPath="Name"
+                              SelectedItem="{Binding SelectedCategoryFilter, Mode=TwoWay}" />
+                </StackPanel>
+
+                <StackPanel Margin="0,0,24,0">
+                    <TextBlock Text="طريقة الدفع" Style="{StaticResource FieldLabelTextStyle}" />
+                    <ComboBox Width="170"
+                              ItemsSource="{Binding PurchaseMethodOptions}"
+                              DisplayMemberPath="Label"
+                              SelectedItem="{Binding SelectedPurchaseMethodFilter, Mode=TwoWay}" />
+                </StackPanel>
+
+                <StackPanel Margin="0,0,24,0">
+                    <TextBlock Text="المحافظة" Style="{StaticResource FieldLabelTextStyle}" />
+                    <ComboBox Width="170"
+                              ItemsSource="{Binding Governorates}"
+                              DisplayMemberPath="Name"
+                              SelectedItem="{Binding SelectedGovernorateFilter, Mode=TwoWay}" />
+                </StackPanel>
+
+                <Button Content="مسح الفلاتر"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        Command="{Binding ClearFiltersCommand}"
+                        VerticalAlignment="Bottom"
+                        Padding="14,9" />
+            </StackPanel>
+        </Border>
 
         <Grid Grid.Row="2">
             <TextBlock Text="جارِ التحميل..."
@@ -48,7 +80,7 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontSize="16"
-                       Foreground="{StaticResource BrandTextSecondaryBrush}" />
+                       Foreground="{DynamicResource BrandTextSecondaryBrush}" />
 
             <StackPanel Visibility="{Binding IsError, Converter={StaticResource BoolToVis}}"
                         HorizontalAlignment="Center"
@@ -70,7 +102,7 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontSize="16"
-                       Foreground="{StaticResource BrandTextSecondaryBrush}" />
+                       Foreground="{DynamicResource BrandTextSecondaryBrush}" />
 
             <DataGrid ItemsSource="{Binding Orders}"
                       Visibility="{Binding HasOrders, Converter={StaticResource BoolToVis}}"

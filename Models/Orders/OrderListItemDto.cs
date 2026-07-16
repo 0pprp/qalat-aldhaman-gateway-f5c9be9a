@@ -8,6 +8,8 @@ public class OrderListItemDto
     public string PhoneNumber { get; set; } = string.Empty;
     public string ProductName { get; set; } = string.Empty;
     public string CategoryName { get; set; } = string.Empty;
+    public int GovernorateId { get; set; }
+    public string GovernorateName { get; set; } = string.Empty;
     public string PurchaseMethod { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
     public decimal TotalPriceSnapshot { get; set; }

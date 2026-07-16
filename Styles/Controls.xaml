@@ -52,8 +52,8 @@
     <!-- زر ثانوي: إطار فقط، للإجراءات الأقل أهمية (إلغاء/إغلاق). -->
     <Style x:Key="SecondaryButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{StaticResource BrandTextPrimaryBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BrandBorderBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrandTextPrimaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrandBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="16,9" />
         <Setter Property="FontFamily" Value="Segoe UI" />
@@ -75,7 +75,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="ButtonBorder" Property="Background" Value="#F0F3F2" />
+                            <Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource BrandControlHoverBrush}" />
                             <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="{StaticResource BrandPrimaryBrush}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
@@ -87,14 +87,59 @@
         </Setter>
     </Style>
 
-    <!-- زر خطر: للحذف والإجراءات التدميرية. -->
+    <!-- زر خطر: للحذف والإجراءات التدميرية. Foreground أبيض صريح هنا (وليس فقط موروثاً
+         من BasedOn) حتى يبقى مضموناً بغض النظر عن أي تغيير مستقبلي بالزر الأساسي. -->
     <Style x:Key="DangerButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Background" Value="{StaticResource DangerBrush}" />
+        <Setter Property="Foreground" Value="White" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{StaticResource DangerLightBrush}" />
             </Trigger>
         </Style.Triggers>
+    </Style>
+
+    <!--
+        زر ثانوي مخصص لسطح داكن ثابت (الشريط الجانبي: تسجيل خروج/تبديل الوضع) — مطابق لـ
+        SecondaryButtonStyle لكن بحالة Hover داكنة بدل BrandControlHoverBrush (الفاتحة/شبه
+        البيضاء، المصمَّمة أصلاً لأزرار فوق خلفية بيضاء). استخدامها هناك كان يسبب نصاً فاتحاً
+        فوق خلفية شبه بيضاء عند الـ Hover — تباين ضعيف جداً بالضبط كما بالصورة المرفقة.
+    -->
+    <Style x:Key="SidebarActionButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderBrush" Value="#2A6E68" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="16,9" />
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="ButtonBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Margin="{TemplateBinding Padding}"
+                                          RecognizesAccessKey="True" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ButtonBorder" Property="Background" Value="#1A6E69" />
+                            <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#3D8B85" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!-- ===================== الجداول (DataGrid) ===================== -->
@@ -111,13 +156,13 @@
     </Style>
 
     <Style TargetType="DataGridRow">
-        <Setter Property="Background" Value="{StaticResource BrandSurfaceBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BrandSurfaceBrush}" />
         <Style.Triggers>
             <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                <Setter Property="Background" Value="#F3F6F5" />
+                <Setter Property="Background" Value="{DynamicResource BrandZebraBrush}" />
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#E8F0EF" />
+                <Setter Property="Background" Value="{DynamicResource BrandRowHoverBrush}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -126,11 +171,11 @@
         <Setter Property="Padding" Value="12,8" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{StaticResource BrandTextPrimaryBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrandTextPrimaryBrush}" />
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="#D9E9E7" />
-                <Setter Property="Foreground" Value="{StaticResource BrandTextPrimaryBrush}" />
+                <Setter Property="Background" Value="{DynamicResource BrandSelectedBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource BrandTextPrimaryBrush}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -138,11 +183,11 @@
     <Style TargetType="DataGrid">
         <Setter Property="AlternationCount" Value="2" />
         <Setter Property="RowHeaderWidth" Value="0" />
-        <Setter Property="BorderBrush" Value="{StaticResource BrandBorderBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrandBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="GridLinesVisibility" Value="Horizontal" />
-        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource BrandBorderBrush}" />
-        <Setter Property="Background" Value="{StaticResource BrandSurfaceBrush}" />
+        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource BrandBorderBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BrandSurfaceBrush}" />
         <Setter Property="RowHeight" Value="42" />
         <Setter Property="CanUserResizeRows" Value="False" />
     </Style>
@@ -153,9 +198,11 @@
         <Setter Property="Padding" Value="10,8" />
         <Setter Property="FontFamily" Value="Segoe UI" />
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="BorderBrush" Value="{StaticResource BrandBorderBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrandBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Background" Value="{StaticResource BrandSurfaceBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BrandSurfaceBrush}" />
+        <!-- كان غير مضبوط إطلاقاً فيرث الأسود الافتراضي لـ WPF — يختفي على سطح داكن بالوضع الليلي. -->
+        <Setter Property="Foreground" Value="{DynamicResource BrandTextPrimaryBrush}" />
         <Setter Property="CaretBrush" Value="{StaticResource BrandPrimaryBrush}" />
         <Setter Property="Template">
             <Setter.Value>
@@ -185,9 +232,10 @@
         <Setter Property="Padding" Value="10,8" />
         <Setter Property="FontFamily" Value="Segoe UI" />
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="BorderBrush" Value="{StaticResource BrandBorderBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrandBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Background" Value="{StaticResource BrandSurfaceBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BrandSurfaceBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrandTextPrimaryBrush}" />
         <Setter Property="CaretBrush" Value="{StaticResource BrandPrimaryBrush}" />
         <Setter Property="Template">
             <Setter.Value>
@@ -213,25 +261,131 @@
         </Setter>
     </Style>
 
+    <!--
+        قوائم منسدلة بخلفية تيل العلامة التجارية ونص أبيض دائماً — ثابتة بكلا الوضعين
+        (StaticResource وليس DynamicResource عمداً، فلا تتأثر بتبديل فاتح/داكن). القالب هنا
+        مبني كاملاً بدل الاعتماد على قالب MaterialDesign الافتراضي (كان يعطي نصاً باهتاً منخفض
+        التباين لا نتحكم بلونه مباشرة).
+    -->
     <Style TargetType="ComboBox">
+        <Setter Property="Background" Value="{StaticResource BrandPrimaryBrush}" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderBrush" Value="{StaticResource BrandPrimaryDarkBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="10,8" />
         <Setter Property="FontFamily" Value="Segoe UI" />
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="materialDesign:ColorZoneAssist.Mode" Value="Standard" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBox">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <ToggleButton x:Name="ToggleButton"
+                                      Grid.Column="0" Grid.ColumnSpan="2"
+                                      Background="{TemplateBinding Background}"
+                                      BorderBrush="{TemplateBinding BorderBrush}"
+                                      BorderThickness="{TemplateBinding BorderThickness}"
+                                      IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                      Focusable="False"
+                                      ClickMode="Press">
+                            <ToggleButton.Template>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="5" />
+                                </ControlTemplate>
+                            </ToggleButton.Template>
+                        </ToggleButton>
+
+                        <ContentPresenter x:Name="ContentSite"
+                                          Grid.Column="0"
+                                          IsHitTestVisible="False"
+                                          Content="{TemplateBinding SelectionBoxItem}"
+                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                          ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                          Margin="{TemplateBinding Padding}"
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Stretch" />
+
+                        <Path Grid.Column="1"
+                              Fill="White"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              Margin="0,0,10,0"
+                              Data="M0,0 L4,4 L8,0 Z" />
+
+                        <Popup x:Name="Popup"
+                               Placement="Bottom"
+                               IsOpen="{TemplateBinding IsDropDownOpen}"
+                               AllowsTransparency="True"
+                               Focusable="False"
+                               PopupAnimation="Fade">
+                            <Border Background="{StaticResource BrandPrimaryBrush}"
+                                    BorderBrush="{StaticResource BrandPrimaryDarkBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="5"
+                                    MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
+                                    MaxHeight="320"
+                                    SnapsToDevicePixels="True">
+                                <ScrollViewer SnapsToDevicePixels="True">
+                                    <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" />
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="ToggleButton" Property="Opacity" Value="0.5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="ComboBoxItem">
+        <Setter Property="Background" Value="{StaticResource BrandPrimaryBrush}" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Padding" Value="10,8" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBoxItem">
+                    <Border x:Name="ItemBorder"
+                            Background="{TemplateBinding Background}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter TargetName="ItemBorder" Property="Background" Value="{StaticResource BrandPrimaryDarkBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="ItemBorder" Property="Background" Value="{StaticResource BrandPrimaryLightBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style TargetType="CheckBox">
         <Setter Property="FontFamily" Value="Segoe UI" />
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="Foreground" Value="{StaticResource BrandTextPrimaryBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrandTextPrimaryBrush}" />
         <Setter Property="Margin" Value="0,4" />
     </Style>
 
     <!-- ===================== بطاقة عامة (للحوارات والإحصائيات) ===================== -->
 
     <Style x:Key="CardBorderStyle" TargetType="Border">
-        <Setter Property="Background" Value="{StaticResource BrandSurfaceBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BrandBorderBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BrandSurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrandBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="10" />
         <Setter Property="Padding" Value="16" />

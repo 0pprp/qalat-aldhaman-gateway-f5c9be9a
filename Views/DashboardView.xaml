@@ -17,7 +17,7 @@
         <Style x:Key="CardValue" TargetType="TextBlock">
             <Setter Property="FontSize" Value="24" />
             <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Foreground" Value="{StaticResource BrandTextPrimaryBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource BrandTextPrimaryBrush}" />
         </Style>
         <Style x:Key="CardIcon" TargetType="materialDesign:PackIcon">
             <Setter Property="Width" Value="26" />
@@ -52,7 +52,7 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontSize="16"
-                       Foreground="{StaticResource BrandTextSecondaryBrush}" />
+                       Foreground="{DynamicResource BrandTextSecondaryBrush}" />
 
             <StackPanel Visibility="{Binding IsError, Converter={StaticResource BoolToVis}}"
                         HorizontalAlignment="Center"

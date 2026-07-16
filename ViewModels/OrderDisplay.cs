@@ -33,7 +33,9 @@ public static class OrderDisplay
         "ContactedByRep" => new SolidColorBrush(Color.FromRgb(0x2E, 0x74, 0xB5)),
         "Confirmed" => new SolidColorBrush(Color.FromRgb(0x1E, 0x7E, 0x34)),
         "Rejected" => new SolidColorBrush(Color.FromRgb(0xC0, 0x39, 0x2B)),
-        "Completed" => new SolidColorBrush(Color.FromRgb(0x17, 0x40, 0x3D)),
+        // كان #17403D (تيل قريب من الأسود) — غير مقروء على خلفية داكنة؛ استُبدل بدرجة أفتح
+        // بنفس مستوى تباين بقية ألوان الحالة (لا يزال قاتماً بما يكفي للقراءة على خلفية فاتحة).
+        "Completed" => new SolidColorBrush(Color.FromRgb(0x1F, 0x6B, 0x65)),
         _ => Brushes.Black,
     };
 }

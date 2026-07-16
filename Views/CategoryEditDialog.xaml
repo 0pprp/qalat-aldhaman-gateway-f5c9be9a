@@ -10,7 +10,7 @@
         ResizeMode="NoResize"
         FlowDirection="RightToLeft"
         FontFamily="Segoe UI"
-        Background="{StaticResource BrandBackgroundBrush}">
+        Background="{DynamicResource BrandBackgroundBrush}">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Window.Resources>
@@ -38,7 +38,7 @@
 
                     <TextBlock Text="صورة الفئة" Style="{StaticResource FieldLabelTextStyle}" />
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-                        <Border Width="64" Height="64" BorderBrush="{StaticResource BrandBorderBrush}" BorderThickness="1" CornerRadius="6" Margin="0,0,12,0">
+                        <Border Width="64" Height="64" BorderBrush="{DynamicResource BrandBorderBrush}" BorderThickness="1" CornerRadius="6" Margin="0,0,12,0">
                             <Image Source="{Binding ImagePreview}" Stretch="UniformToFill" />
                         </Border>
                         <StackPanel VerticalAlignment="Center">

@@ -1,10 +1,14 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Json;
 using System.Windows;
+using ClosedXML.Excel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Win32;
 using QalatAldhaman.Store.Admin.Models.Categories;
+using QalatAldhaman.Store.Admin.Models.Governorates;
 using QalatAldhaman.Store.Admin.Models.Orders;
 using QalatAldhaman.Store.Admin.Services;
 using QalatAldhaman.Store.Admin.Views;
@@ -18,6 +22,8 @@ public partial class OrdersViewModel : ObservableObject
     public ObservableCollection<OrderRowViewModel> Orders { get; } = [];
 
     public ObservableCollection<CategoryDto> Categories { get; } = [];
+
+    public ObservableCollection<GovernorateDto> Governorates { get; } = [];
 
     public List<FilterOption> StatusOptions { get; } =
     [
@@ -42,6 +48,11 @@ public partial class OrdersViewModel : ObservableObject
 
     [ObservableProperty]
     private CategoryDto? _selectedCategoryFilter;
+
+    [ObservableProperty]
+    private GovernorateDto? _selectedGovernorateFilter;
+
+    private bool _suppressFilterReload;
 
     [ObservableProperty]
     private bool _isLoading;
@@ -75,13 +86,23 @@ public partial class OrdersViewModel : ObservableObject
         OnPropertyChanged(nameof(HasOrders));
     }
 
-    partial void OnSelectedStatusFilterChanged(FilterOption? value) => _ = LoadAsync();
-    partial void OnSelectedPurchaseMethodFilterChanged(FilterOption? value) => _ = LoadAsync();
-    partial void OnSelectedCategoryFilterChanged(CategoryDto? value) => _ = LoadAsync();
+    partial void OnSelectedStatusFilterChanged(FilterOption? value) => TriggerReload();
+    partial void OnSelectedPurchaseMethodFilterChanged(FilterOption? value) => TriggerReload();
+    partial void OnSelectedCategoryFilterChanged(CategoryDto? value) => TriggerReload();
+    partial void OnSelectedGovernorateFilterChanged(GovernorateDto? value) => TriggerReload();
+
+    private void TriggerReload()
+    {
+        if (!_suppressFilterReload)
+        {
+            _ = LoadAsync();
+        }
+    }
 
     public async Task InitializeAsync()
     {
         await LoadCategoriesAsync();
+        await LoadGovernoratesAsync();
         await LoadAsync();
     }
 
@@ -106,6 +127,27 @@ public partial class OrdersViewModel : ObservableObject
         }
     }
 
+    private async Task LoadGovernoratesAsync()
+    {
+        try
+        {
+            var response = await _apiClient.GetAsync("/api/governorates");
+            if (response.IsSuccessStatusCode)
+            {
+                var governorates = await response.Content.ReadFromJsonAsync<List<GovernorateDto>>(JsonDefaults.Options);
+                Governorates.Clear();
+                foreach (var governorate in governorates ?? [])
+                {
+                    Governorates.Add(governorate);
+                }
+            }
+        }
+        catch (Exception)
+        {
+            // فشل تحميل المحافظات هنا لا يمنع عرض الطلبات — فلتر المحافظة يبقى فارغاً فقط.
+        }
+    }
+
     [RelayCommand]
     public async Task LoadAsync()
     {
@@ -119,6 +161,7 @@ public partial class OrdersViewModel : ObservableObject
             if (SelectedStatusFilter?.Value is { } status) query.Add($"status={status}");
             if (SelectedPurchaseMethodFilter?.Value is { } method) query.Add($"purchaseMethod={method}");
             if (SelectedCategoryFilter is not null) query.Add($"categoryId={SelectedCategoryFilter.Id}");
+            if (SelectedGovernorateFilter is not null) query.Add($"governorateId={SelectedGovernorateFilter.Id}");
 
             var uri = "/api/admin/orders" + (query.Count > 0 ? "?" + string.Join("&", query) : string.Empty);
             var response = await _apiClient.GetAsync(uri);
@@ -151,6 +194,99 @@ public partial class OrdersViewModel : ObservableObject
         finally
         {
             IsLoading = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task ClearFilters()
+    {
+        _suppressFilterReload = true;
+        SelectedStatusFilter = null;
+        SelectedPurchaseMethodFilter = null;
+        SelectedCategoryFilter = null;
+        SelectedGovernorateFilter = null;
+        _suppressFilterReload = false;
+
+        await LoadAsync();
+    }
+
+    [RelayCommand]
+    private void ExportToExcel()
+    {
+        if (Orders.Count == 0)
+        {
+            MessageBox.Show("لا توجد بيانات لتصديرها", "تصدير إلى Excel", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
+        var dialog = new SaveFileDialog
+        {
+            Filter = "ملفات Excel (*.xlsx)|*.xlsx",
+            FileName = $"طلبات-قلعة-الضمان-{DateTime.Now:yyyy-MM-dd}.xlsx",
+        };
+
+        if (dialog.ShowDialog() != true)
+        {
+            return;
+        }
+
+        try
+        {
+            using var workbook = new XLWorkbook();
+            var sheet = workbook.Worksheets.Add("الطلبات");
+            sheet.RightToLeft = true;
+
+            string[] headers =
+            [
+                "رقم الطلب", "اسم الزبون", "رقم الهاتف", "المحافظة", "اسم المنتج",
+                "طريقة الدفع", "المبلغ الكلي", "الدفعة الدورية", "الحالة", "التاريخ",
+            ];
+
+            for (var i = 0; i < headers.Length; i++)
+            {
+                var headerCell = sheet.Cell(1, i + 1);
+                headerCell.Value = headers[i];
+                headerCell.Style.Font.Bold = true;
+            }
+
+            var row = 2;
+            foreach (var order in Orders)
+            {
+                sheet.Cell(row, 1).Value = order.OrderNumber;
+                sheet.Cell(row, 2).Value = order.CustomerName;
+                sheet.Cell(row, 3).Value = order.PhoneNumber;
+                sheet.Cell(row, 4).Value = order.GovernorateName;
+                sheet.Cell(row, 5).Value = order.ProductName;
+                sheet.Cell(row, 6).Value = order.PurchaseMethodText;
+                sheet.Cell(row, 7).Value = order.TotalPriceSnapshot;
+
+                if (order.InstallmentPaymentAmountSnapshot is { } installmentAmount)
+                {
+                    sheet.Cell(row, 8).Value = installmentAmount;
+                }
+
+                sheet.Cell(row, 9).Value = order.StatusText;
+                sheet.Cell(row, 10).Value = order.CreatedAtText;
+                row++;
+            }
+
+            sheet.Columns().AdjustToContents();
+            workbook.SaveAs(dialog.FileName);
+
+            var openResult = MessageBox.Show(
+                "تم التصدير بنجاح. هل تريد فتح الملف الآن؟",
+                "تصدير إلى Excel",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Information);
+
+            if (openResult == MessageBoxResult.Yes)
+            {
+                Process.Start(new ProcessStartInfo(dialog.FileName) { UseShellExecute = true });
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"فشل التصدير: {ex.Message}", "خطأ", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 

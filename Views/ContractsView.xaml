@@ -25,7 +25,7 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontSize="16"
-                       Foreground="{StaticResource BrandTextSecondaryBrush}" />
+                       Foreground="{DynamicResource BrandTextSecondaryBrush}" />
 
             <StackPanel Visibility="{Binding IsError, Converter={StaticResource BoolToVis}}"
                         HorizontalAlignment="Center"
@@ -56,7 +56,7 @@
                 <ItemsControl ItemsSource="{Binding Contracts}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border BorderBrush="{StaticResource BrandBorderBrush}" BorderThickness="0,0,0,1" Padding="12,16">
+                            <Border BorderBrush="{DynamicResource BrandBorderBrush}" BorderThickness="0,0,0,1" Padding="12,16">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="220" />

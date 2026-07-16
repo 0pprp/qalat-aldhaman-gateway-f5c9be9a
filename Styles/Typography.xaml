@@ -7,26 +7,26 @@
         <Setter Property="FontFamily" Value="Segoe UI" />
         <Setter Property="FontSize" Value="24" />
         <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="Foreground" Value="{StaticResource BrandTextPrimaryBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrandTextPrimaryBrush}" />
     </Style>
 
     <Style x:Key="SubheaderTextStyle" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Segoe UI" />
         <Setter Property="FontSize" Value="18" />
         <Setter Property="FontWeight" Value="SemiBold" />
-        <Setter Property="Foreground" Value="{StaticResource BrandTextPrimaryBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrandTextPrimaryBrush}" />
     </Style>
 
     <Style x:Key="BodyTextStyle" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Segoe UI" />
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="Foreground" Value="{StaticResource BrandTextPrimaryBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrandTextPrimaryBrush}" />
     </Style>
 
     <Style x:Key="CaptionTextStyle" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Segoe UI" />
         <Setter Property="FontSize" Value="12" />
-        <Setter Property="Foreground" Value="{StaticResource BrandTextSecondaryBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrandTextSecondaryBrush}" />
     </Style>
 
     <Style x:Key="FieldLabelTextStyle" TargetType="TextBlock" BasedOn="{StaticResource CaptionTextStyle}">
@@ -34,10 +34,15 @@
         <Setter Property="Margin" Value="0,0,0,4" />
     </Style>
 
-    <!-- خط افتراضي لكل TextBlock بالتطبيق (بدون الحاجة لكتابة FontFamily بكل مكان). -->
+    <!--
+        خط ولون افتراضيان لكل TextBlock بالتطبيق (بدون الحاجة لكتابة FontFamily/Foreground بكل
+        مكان). تحديد Foreground هنا صراحة مهم: بدونه، أي TextBlock عادي بدون Style محدد يرث
+        اللون الافتراضي للـ WPF (أسود ثابت) الذي يبقى أسود حتى بالوضع الداكن فيختفي على خلفية داكنة.
+    -->
     <Style TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Segoe UI" />
         <Setter Property="FontSize" Value="14" />
+        <Setter Property="Foreground" Value="{DynamicResource BrandTextPrimaryBrush}" />
     </Style>
 
 </ResourceDictionary>

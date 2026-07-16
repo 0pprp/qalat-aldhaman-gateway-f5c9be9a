@@ -8,6 +8,10 @@
             <ResourceDictionary.MergedDictionaries>
                 <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="Teal" SecondaryColor="Amber" />
                 <ResourceDictionary Source="Styles/Colors.xaml" />
+                <!-- الوضع الافتراضي عند أول تشغيل بدون تفضيل محفوظ: فاتح. ThemeService.Initialize()
+                     يستبدل هذا القاموس بـ Theme.Dark.xaml وقت الإقلاع إن كان التفضيل المحفوظ داكناً،
+                     قبل ظهور أي نافذة (لا وميض مرئي). -->
+                <ResourceDictionary Source="Styles/Theme.Light.xaml" />
                 <ResourceDictionary Source="Styles/Typography.xaml" />
                 <ResourceDictionary Source="Styles/Controls.xaml" />
             </ResourceDictionary.MergedDictionaries>

@@ -40,7 +40,7 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontSize="16"
-                       Foreground="{StaticResource BrandTextSecondaryBrush}" />
+                       Foreground="{DynamicResource BrandTextSecondaryBrush}" />
 
             <StackPanel Visibility="{Binding IsError, Converter={StaticResource BoolToVis}}"
                         HorizontalAlignment="Center"
@@ -62,7 +62,7 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontSize="16"
-                       Foreground="{StaticResource BrandTextSecondaryBrush}" />
+                       Foreground="{DynamicResource BrandTextSecondaryBrush}" />
 
             <DataGrid ItemsSource="{Binding Products}"
                       Visibility="{Binding HasProducts, Converter={StaticResource BoolToVis}}"

@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="تسجيل الدخول — لوحة تحكم قلعة الضمان"
         Height="560" Width="440"
@@ -24,7 +23,7 @@
         </Grid.Background>
 
         <Border Width="360"
-                Background="{StaticResource BrandSurfaceBrush}"
+                Background="{DynamicResource BrandSurfaceBrush}"
                 CornerRadius="14"
                 Padding="32,36"
                 HorizontalAlignment="Center"
@@ -34,22 +33,26 @@
             </Border.Effect>
 
             <StackPanel IsEnabled="{Binding IsLoginEnabled}">
-                <Border Width="60" Height="60"
-                        Background="{StaticResource BrandPrimaryDarkBrush}"
-                        CornerRadius="30"
-                        HorizontalAlignment="Center"
-                        Margin="0,0,0,14">
-                    <materialDesign:PackIcon Kind="ShieldCheckOutline"
-                                             Width="32" Height="32"
-                                             Foreground="{StaticResource BrandAccentBrush}"
-                                             HorizontalAlignment="Center"
-                                             VerticalAlignment="Center" />
-                </Border>
+                <Ellipse Width="60" Height="60"
+                         HorizontalAlignment="Center"
+                         Margin="0,0,0,14">
+                    <Ellipse.Fill>
+                        <ImageBrush Stretch="UniformToFill">
+                            <ImageBrush.ImageSource>
+                                <!-- الملف الأصلي لوغو كامل (شعار + نص "قلعة الضمان")؛ القص هنا يعرض الشعار فقط بدون النص لأنه سيصغر لدرجة يتعذر قراءته ببادج دائري 60px. -->
+                                <CroppedBitmap SourceRect="0,0,3195,2360">
+                                    <CroppedBitmap.Source>
+                                        <BitmapImage UriSource="/Assets/logo.png" />
+                                    </CroppedBitmap.Source>
+                                </CroppedBitmap>
+                            </ImageBrush.ImageSource>
+                        </ImageBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
 
                 <TextBlock Text="قلعة الضمان"
                            Style="{StaticResource HeaderTextStyle}"
                            HorizontalAlignment="Center"
-                           Foreground="{StaticResource BrandPrimaryDarkBrush}"
                            Margin="0,0,0,2" />
                 <TextBlock Text="لوحة تحكم الأدمن"
                            Style="{StaticResource CaptionTextStyle}"

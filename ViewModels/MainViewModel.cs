@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MaterialDesignThemes.Wpf;
 using QalatAldhaman.Store.Admin.Services;
 
 namespace QalatAldhaman.Store.Admin.ViewModels;
@@ -8,6 +9,7 @@ public partial class MainViewModel : ObservableObject
 {
     private readonly SessionService _sessionService;
     private readonly ApiClient _apiClient;
+    private readonly ThemeService _themeService;
     private readonly CategoriesViewModel _categoriesViewModel;
     private readonly ProductsViewModel _productsViewModel;
     private readonly OrdersViewModel _ordersViewModel;
@@ -34,9 +36,24 @@ public partial class MainViewModel : ObservableObject
 
     public string FullName => _sessionService.FullName ?? string.Empty;
 
+    [ObservableProperty]
+    private bool _isDarkTheme;
+
+    /// <summary>الأيقونة تعرض الوضع الذي سيُنتقل إليه عند الضغط (نمط شائع بأزرار تبديل الثيم).</summary>
+    public PackIconKind ThemeToggleIcon => IsDarkTheme ? PackIconKind.WeatherSunny : PackIconKind.WeatherNight;
+
+    public string ThemeToggleLabel => IsDarkTheme ? "الوضع الفاتح" : "الوضع الداكن";
+
+    partial void OnIsDarkThemeChanged(bool value)
+    {
+        OnPropertyChanged(nameof(ThemeToggleIcon));
+        OnPropertyChanged(nameof(ThemeToggleLabel));
+    }
+
     public MainViewModel(
         SessionService sessionService,
         ApiClient apiClient,
+        ThemeService themeService,
         CategoriesViewModel categoriesViewModel,
         ProductsViewModel productsViewModel,
         OrdersViewModel ordersViewModel,
@@ -46,6 +63,7 @@ public partial class MainViewModel : ObservableObject
     {
         _sessionService = sessionService;
         _apiClient = apiClient;
+        _themeService = themeService;
         _categoriesViewModel = categoriesViewModel;
         _productsViewModel = productsViewModel;
         _ordersViewModel = ordersViewModel;
@@ -53,6 +71,14 @@ public partial class MainViewModel : ObservableObject
         _contractsViewModel = contractsViewModel;
         _dashboardViewModel = dashboardViewModel;
         _currentViewModel = _categoriesViewModel;
+        _isDarkTheme = _themeService.IsDarkTheme;
+    }
+
+    [RelayCommand]
+    private void ToggleTheme()
+    {
+        _themeService.ToggleTheme();
+        IsDarkTheme = _themeService.IsDarkTheme;
     }
 
     partial void OnSelectedNavItemChanged(string value)

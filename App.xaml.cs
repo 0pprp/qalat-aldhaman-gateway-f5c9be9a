@@ -32,6 +32,7 @@ public partial class App : Application
             .ConfigureServices((context, services) =>
             {
                 services.AddSingleton<SessionService>();
+                services.AddSingleton<ThemeService>();
 
                 services.AddHttpClient<ApiClient>((_, client) =>
                 {
@@ -62,6 +63,9 @@ public partial class App : Application
         _host.Start();
 
         _host.Services.GetRequiredService<SessionService>().SessionEnded += OnSessionEnded;
+
+        // يُطبَّق التفضيل المحفوظ (أو الفاتح افتراضياً) قبل ظهور أي نافذة، فلا يحدث أي وميض مرئي.
+        _host.Services.GetRequiredService<ThemeService>().Initialize();
 
         ShowLoginWindow();
     }

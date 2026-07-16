@@ -10,7 +10,7 @@
         ResizeMode="NoResize"
         FlowDirection="RightToLeft"
         FontFamily="Segoe UI"
-        Background="{StaticResource BrandBackgroundBrush}">
+        Background="{DynamicResource BrandBackgroundBrush}">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
         <Style x:Key="SectionTitle" TargetType="TextBlock" BasedOn="{StaticResource SubheaderTextStyle}">
@@ -31,7 +31,7 @@
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    FontSize="16"
-                   Foreground="{StaticResource BrandTextSecondaryBrush}" />
+                   Foreground="{DynamicResource BrandTextSecondaryBrush}" />
 
         <TextBlock Text="{Binding ErrorMessage}"
                    Visibility="{Binding IsError, Converter={StaticResource BoolToVis}}"

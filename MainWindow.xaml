@@ -12,7 +12,7 @@
         Title="لوحة تحكم قلعة الضمان" Height="640" Width="1080"
         FlowDirection="RightToLeft"
         FontFamily="Segoe UI"
-        Background="{StaticResource BrandBackgroundBrush}"
+        Background="{DynamicResource BrandBackgroundBrush}"
         WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <converters:NavIconConverter x:Key="NavIconConverter" />
@@ -46,7 +46,7 @@
             <TextBlock Style="{StaticResource HeaderTextStyle}"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
-                       Foreground="{StaticResource BrandTextSecondaryBrush}">
+                       Foreground="{DynamicResource BrandTextSecondaryBrush}">
                 <Run Text="صفحة: " />
                 <Run Text="{Binding Title, Mode=OneWay}" FontWeight="Bold" />
                 <Run Text=" (قيد الإنشاء)" />
@@ -103,14 +103,25 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <materialDesign:PackIcon Grid.Row="0"
-                                         Kind="ShieldCheckOutline"
-                                         Width="34" Height="34"
-                                         Foreground="{StaticResource BrandAccentBrush}"
-                                         HorizontalAlignment="Center"
-                                         Margin="0,0,0,8" />
+                <Ellipse Grid.Row="0"
+                         Width="44" Height="44"
+                         HorizontalAlignment="Center"
+                         Margin="0,0,0,8">
+                    <Ellipse.Fill>
+                        <ImageBrush Stretch="UniformToFill">
+                            <ImageBrush.ImageSource>
+                                <CroppedBitmap SourceRect="0,0,3195,2360">
+                                    <CroppedBitmap.Source>
+                                        <BitmapImage UriSource="/Assets/logo.png" />
+                                    </CroppedBitmap.Source>
+                                </CroppedBitmap>
+                            </ImageBrush.ImageSource>
+                        </ImageBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
 
                 <TextBlock Grid.Row="1"
                            Text="قلعة الضمان"
@@ -140,25 +151,39 @@
                                                          Width="19" Height="19"
                                                          Margin="10,0,0,0"
                                                          VerticalAlignment="Center" />
-                                <TextBlock Text="{Binding}" VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding}"
+                                           VerticalAlignment="Center"
+                                           Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" />
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
 
                 <Button Grid.Row="4"
+                        Command="{Binding ToggleThemeCommand}"
+                        Style="{StaticResource SidebarActionButtonStyle}"
+                        Margin="16,8,16,0"
+                        Height="38">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="{Binding ThemeToggleIcon}"
+                                                 Width="17" Height="17"
+                                                 Margin="0,0,8,0"
+                                                 VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding ThemeToggleLabel}" VerticalAlignment="Center" Foreground="White" />
+                    </StackPanel>
+                </Button>
+
+                <Button Grid.Row="5"
                         Content="تسجيل خروج"
                         Command="{Binding LogoutCommand}"
-                        Style="{StaticResource SecondaryButtonStyle}"
-                        Foreground="#CFE3E0"
-                        BorderBrush="#2A6E68"
+                        Style="{StaticResource SidebarActionButtonStyle}"
                         Margin="16,8,16,0"
                         Height="38" />
             </Grid>
         </Border>
 
         <!-- Content area: عنصر واحد فقط يُعرض بكل لحظة -->
-        <Border Grid.Column="1" Background="{StaticResource BrandBackgroundBrush}">
+        <Border Grid.Column="1" Background="{DynamicResource BrandBackgroundBrush}">
             <ContentControl Content="{Binding CurrentViewModel}" Focusable="False" />
         </Border>
     </Grid>

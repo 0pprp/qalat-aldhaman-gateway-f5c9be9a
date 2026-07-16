@@ -10,7 +10,7 @@
         ResizeMode="NoResize"
         FlowDirection="RightToLeft"
         FontFamily="Segoe UI"
-        Background="{StaticResource BrandBackgroundBrush}">
+        Background="{DynamicResource BrandBackgroundBrush}">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Window.Resources>
@@ -112,7 +112,7 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="0,0,8,8">
-                                        <Border Width="72" Height="72" BorderBrush="{StaticResource BrandBorderBrush}" BorderThickness="1" CornerRadius="6">
+                                        <Border Width="72" Height="72" BorderBrush="{DynamicResource BrandBorderBrush}" BorderThickness="1" CornerRadius="6">
                                             <Image Source="{Binding ResolvedUrl}" Stretch="UniformToFill" />
                                         </Border>
                                         <Button Content="✕"
