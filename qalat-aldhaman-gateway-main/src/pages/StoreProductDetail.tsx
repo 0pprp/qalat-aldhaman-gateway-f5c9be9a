@@ -22,6 +22,9 @@ import { fetchProductDetail } from '@/lib/storeApi';
 import { resolveMediaUrl } from '@/lib/api';
 import { formatIQD } from '@/lib/utils';
 
+const PURCHASE_BUTTON_CLASS =
+  'w-full items-start sm:items-center justify-start gap-3 whitespace-normal text-start h-auto min-h-12 py-3 leading-snug';
+
 const StoreProductDetailContent = () => {
   const { id } = useParams<{ id: string }>();
   const { t, isRTL } = useLanguage();
@@ -143,9 +146,9 @@ const StoreProductDetailContent = () => {
 
               <div className="space-y-3">
                 {product.category.allowsCash && product.cashPrice != null && (
-                  <Button asChild size="lg" className="w-full justify-start gap-3">
+                  <Button asChild size="lg" className={PURCHASE_BUTTON_CLASS}>
                     <Link to={`/store/order/${product.id}?method=Cash`}>
-                      <Banknote className="w-5 h-5" />
+                      <Banknote className="w-5 h-5 shrink-0" />
                       <span className={isRTL ? 'font-arabic' : ''}>
                         {t('شراء نقداً', 'Buy with Cash')} — {formatIQD(product.cashPrice)}
                       </span>
@@ -156,37 +159,58 @@ const StoreProductDetailContent = () => {
                 {product.category.allowsMonthlyInstallment &&
                   product.monthlyTotalPrice != null &&
                   product.monthlyPaymentAmount != null && (
-                    <>
-                      <Button asChild size="lg" variant="secondary" className="w-full justify-start gap-3">
-                        <Link to={`/store/order/${product.id}?method=MonthlyInstallment`}>
-                          <CalendarClock className="w-5 h-5" />
-                          <span className={isRTL ? 'font-arabic' : ''}>
-                            {t('قسط شهري', 'Monthly Installment')} — {t('المبلغ الكلي', 'Total')}{' '}
-                            {formatIQD(product.monthlyTotalPrice)} ({t('دفعة شهرية', 'monthly payment')}{' '}
-                            {formatIQD(product.monthlyPaymentAmount)})
-                          </span>
-                        </Link>
-                      </Button>
+                    <Button asChild size="lg" variant="secondary" className={PURCHASE_BUTTON_CLASS}>
+                      <Link to={`/store/order/${product.id}?method=MonthlyInstallment`}>
+                        <CalendarClock className="w-5 h-5 shrink-0" />
+                        <span className={isRTL ? 'font-arabic' : ''}>
+                          {t('قسط شهري', 'Monthly Installment')} — {t('المبلغ الكلي', 'Total')}{' '}
+                          {formatIQD(product.monthlyTotalPrice)} ({t('دفعة شهرية', 'monthly payment')}{' '}
+                          {formatIQD(product.monthlyPaymentAmount)}
+                          {product.monthlyDownPayment != null && (
+                            <>
+                              {t('، ', ', ')}
+                              {t('مقدمة', 'down payment')} {formatIQD(product.monthlyDownPayment)}
+                            </>
+                          )}
+                          )
+                        </span>
+                      </Link>
+                    </Button>
+                  )}
 
-                      <Button asChild size="lg" variant="outline" className="w-full justify-start gap-3">
-                        <Link to={`/store/order/${product.id}?method=MonthlyRafidain`}>
-                          <Landmark className="w-5 h-5" />
-                          <span className={isRTL ? 'font-arabic' : ''}>
-                            {t('قسط شهري — عبر منصة الرافدين (للموظفين)', 'Monthly Installment — via Al-Rafidain (Employees)')} —{' '}
-                            {t('المبلغ الكلي', 'Total')} {formatIQD(product.monthlyTotalPrice)} ({t('دفعة شهرية', 'monthly payment')}{' '}
-                            {formatIQD(product.monthlyPaymentAmount)})
-                          </span>
-                        </Link>
-                      </Button>
-                    </>
+                {product.category.allowsMonthlyInstallment &&
+                  product.rafidainTotalPrice != null &&
+                  product.rafidainPaymentAmount != null && (
+                    <Button
+                      asChild
+                      size="lg"
+                      variant="secondary"
+                      className={`${PURCHASE_BUTTON_CLASS} bg-secondary/80 border-2 border-accent/70 hover:bg-secondary/70`}
+                    >
+                      <Link to={`/store/order/${product.id}?method=MonthlyRafidain`}>
+                        <Landmark className="w-5 h-5 shrink-0" />
+                        <span className={isRTL ? 'font-arabic' : ''}>
+                          {t('قسط شهري — عبر منصة الرافدين (للموظفين)', 'Monthly Installment — via Al-Rafidain (Employees)')} —{' '}
+                          {t('المبلغ الكلي', 'Total')} {formatIQD(product.rafidainTotalPrice)} ({t('دفعة شهرية', 'monthly payment')}{' '}
+                          {formatIQD(product.rafidainPaymentAmount)}
+                          {product.rafidainDownPayment != null && (
+                            <>
+                              {t('، ', ', ')}
+                              {t('مقدمة', 'down payment')} {formatIQD(product.rafidainDownPayment)}
+                            </>
+                          )}
+                          )
+                        </span>
+                      </Link>
+                    </Button>
                   )}
 
                 {product.category.allowsDailyInstallment &&
                   product.dailyTotalPrice != null &&
                   product.dailyPaymentAmount != null && (
-                    <Button asChild size="lg" variant="secondary" className="w-full justify-start gap-3">
+                    <Button asChild size="lg" variant="secondary" className={PURCHASE_BUTTON_CLASS}>
                       <Link to={`/store/order/${product.id}?method=DailyInstallment`}>
-                        <CalendarDays className="w-5 h-5" />
+                        <CalendarDays className="w-5 h-5 shrink-0" />
                         <span className={isRTL ? 'font-arabic' : ''}>
                           {t('قسط يومي', 'Daily Installment')} — {t('المبلغ الكلي', 'Total')}{' '}
                           {formatIQD(product.dailyTotalPrice)} ({t('دفعة يومية', 'daily payment')}{' '}

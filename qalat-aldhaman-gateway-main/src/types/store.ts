@@ -46,6 +46,10 @@ export interface ProductDetail {
   cashPrice: number | null;
   monthlyTotalPrice: number | null;
   monthlyPaymentAmount: number | null;
+  monthlyDownPayment: number | null;
+  rafidainTotalPrice: number | null;
+  rafidainPaymentAmount: number | null;
+  rafidainDownPayment: number | null;
   dailyTotalPrice: number | null;
   dailyPaymentAmount: number | null;
   contractPdfUrl: string | null;

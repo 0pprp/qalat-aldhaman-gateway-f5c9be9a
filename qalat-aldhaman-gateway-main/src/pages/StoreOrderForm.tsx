@@ -104,13 +104,24 @@ const StoreOrderFormContent = () => {
       ? product.cashPrice
       : method === 'DailyInstallment'
         ? product.dailyTotalPrice
-        : product.monthlyTotalPrice;
+        : method === 'MonthlyRafidain'
+          ? product.rafidainTotalPrice
+          : product.monthlyTotalPrice;
 
   const paymentForMethod = !product || !method || method === 'Cash'
     ? null
     : method === 'DailyInstallment'
       ? product.dailyPaymentAmount
-      : product.monthlyPaymentAmount;
+      : method === 'MonthlyRafidain'
+        ? product.rafidainPaymentAmount
+        : product.monthlyPaymentAmount;
+
+  const downPaymentForMethod =
+    !product || (method !== 'MonthlyInstallment' && method !== 'MonthlyRafidain')
+      ? null
+      : method === 'MonthlyRafidain'
+        ? product.rafidainDownPayment
+        : product.monthlyDownPayment;
 
   const methodAllowed =
     !!product &&
@@ -367,7 +378,14 @@ const StoreOrderFormContent = () => {
                           <>
                             {t('المبلغ الكلي', 'Total')} {formatIQD(totalForMethod)} (
                             {method === 'DailyInstallment' ? t('دفعة يومية', 'daily payment') : t('دفعة شهرية', 'monthly payment')}{' '}
-                            {formatIQD(paymentForMethod)})
+                            {formatIQD(paymentForMethod)}
+                            {downPaymentForMethod != null && (
+                              <>
+                                {t('، ', ', ')}
+                                {t('مقدمة', 'down payment')} {formatIQD(downPaymentForMethod)}
+                              </>
+                            )}
+                            )
                           </>
                         )}
                   </p>
