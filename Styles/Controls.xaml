@@ -266,6 +266,13 @@
         (StaticResource وليس DynamicResource عمداً، فلا تتأثر بتبديل فاتح/داكن). القالب هنا
         مبني كاملاً بدل الاعتماد على قالب MaterialDesign الافتراضي (كان يعطي نصاً باهتاً منخفض
         التباين لا نتحكم بلونه مباشرة).
+
+        ملاحظة مهمة (سبب خلل "القائمة لا تفتح"): Popup.IsOpen مربوطة بـ Binding كامل
+        (RelativeSource TemplatedParent) وليس {TemplateBinding} — رغم أن TemplateBinding يعمل
+        بشكل طبيعي مع أغلب الخصائص، هو غير موثوق تحديداً مع Popup.IsOpen (مشكلة معروفة بـ WPF:
+        Popup لا يشارك بالشجرة البصرية العادية بنفس طريقة بقية العناصر، فالمسار المختصر لـ
+        TemplateBinding لا يلتقط تغيّر القيمة بشكل موثوق). كانت النتيجة: IsDropDownOpen يتغيّر
+        فعلياً إلى True عند الضغط (التحقق مؤكد)، لكن الـ Popup نفسه لا يظهر بصرياً إطلاقاً.
     -->
     <Style TargetType="ComboBox">
         <Setter Property="Background" Value="{StaticResource BrandPrimaryBrush}" />
@@ -322,7 +329,7 @@
 
                         <Popup x:Name="Popup"
                                Placement="Bottom"
-                               IsOpen="{TemplateBinding IsDropDownOpen}"
+                               IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}"
                                AllowsTransparency="True"
                                Focusable="False"
                                PopupAnimation="Fade">

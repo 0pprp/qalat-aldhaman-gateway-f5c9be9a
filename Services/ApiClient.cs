@@ -79,7 +79,14 @@ public class ApiClient
             return await _httpClient.PostAsync(requestUri, content, cancellationToken);
         });
 
-    /// <summary>يحوّل رابطاً نسبياً قادماً من الباك اند (مثل /uploads/categories/x.png) لرابط كامل بأصل الـ API.</summary>
+    /// <summary>
+    /// يحوّل رابطاً نسبياً قادماً من الباك اند (مثل /uploads/categories/x.png) لرابط كامل.
+    /// يستخدم أصل الـ BaseAddress فقط (Scheme+Authority) وليس مساره الفرعي الكامل — الملفات
+    /// الساكنة (UseStaticFiles بدون RequestPath، راجع Program.cs بالباك اند) تُخدَّم من جذر
+    /// الموقع مباشرة (https://qalataldhaman.com/uploads/...) وليس تحت /api كما BaseUrl نفسه
+    /// (https://qalataldhaman.com/api)، فتجميعهما نصياً كان سينتج مساراً خاطئاً
+    /// (.../api/uploads/... بدل .../uploads/...).
+    /// </summary>
     public string? ResolveMediaUrl(string? path)
     {
         if (string.IsNullOrWhiteSpace(path))
@@ -92,7 +99,13 @@ public class ApiClient
             return path;
         }
 
-        var baseUrl = _httpClient.BaseAddress?.ToString().TrimEnd('/') ?? string.Empty;
-        return $"{baseUrl}{path}";
+        var baseAddress = _httpClient.BaseAddress;
+        if (baseAddress is null)
+        {
+            return path;
+        }
+
+        var origin = $"{baseAddress.Scheme}://{baseAddress.Authority}";
+        return $"{origin}{path}";
     }
 }

@@ -12,5 +12,6 @@ public partial class OrderDetailDialog : Window
     {
         InitializeComponent();
         DataContext = viewModel;
+        viewModel.CloseRequested += Close;
     }
 }

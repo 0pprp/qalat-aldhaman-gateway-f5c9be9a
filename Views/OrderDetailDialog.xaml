@@ -6,6 +6,7 @@
         mc:Ignorable="d"
         Title="{Binding OrderNumberTitle}"
         Height="740" Width="540"
+        Icon="/Assets/app-icon.ico"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         FlowDirection="RightToLeft"
@@ -130,12 +131,20 @@
                            TextWrapping="Wrap"
                            Margin="0,0,0,8" />
 
-                <Button Content="حفظ الحالة"
-                        Command="{Binding SaveStatusCommand}"
-                        IsEnabled="{Binding IsFormEnabled}"
-                        Width="120"
-                        Height="36"
-                        HorizontalAlignment="Left" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Button Content="حفظ الحالة"
+                            Command="{Binding SaveStatusCommand}"
+                            IsEnabled="{Binding IsFormEnabled}"
+                            Width="120"
+                            Height="36"
+                            Margin="0,0,8,0" />
+                    <Button Content="حذف الطلب نهائياً"
+                            Style="{StaticResource DangerButtonStyle}"
+                            Command="{Binding DeleteCommand}"
+                            IsEnabled="{Binding IsFormEnabled}"
+                            Width="140"
+                            Height="36" />
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
         </Border>

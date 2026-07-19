@@ -40,6 +40,18 @@ public partial class ProductEditViewModel : ObservableObject
     private string _monthlyPaymentAmount = string.Empty;
 
     [ObservableProperty]
+    private string _monthlyDownPayment = string.Empty;
+
+    [ObservableProperty]
+    private string _rafidainTotalPrice = string.Empty;
+
+    [ObservableProperty]
+    private string _rafidainPaymentAmount = string.Empty;
+
+    [ObservableProperty]
+    private string _rafidainDownPayment = string.Empty;
+
+    [ObservableProperty]
     private string _dailyTotalPrice = string.Empty;
 
     [ObservableProperty]
@@ -64,6 +76,7 @@ public partial class ProductEditViewModel : ObservableObject
 
     public bool IsCashPriceEnabled => SelectedCategory?.AllowsCash ?? false;
     public bool IsMonthlyPriceEnabled => SelectedCategory?.AllowsMonthlyInstallment ?? false;
+    public bool IsRafidainPriceEnabled => SelectedCategory?.AllowsMonthlyInstallment ?? false;
     public bool IsDailyPriceEnabled => SelectedCategory?.AllowsDailyInstallment ?? false;
 
     public bool IsImagesSectionEnabled => _productId.HasValue;
@@ -89,6 +102,10 @@ public partial class ProductEditViewModel : ObservableObject
             CashPrice = existing.CashPrice?.ToString() ?? string.Empty;
             MonthlyTotalPrice = existing.MonthlyTotalPrice?.ToString() ?? string.Empty;
             MonthlyPaymentAmount = existing.MonthlyPaymentAmount?.ToString() ?? string.Empty;
+            MonthlyDownPayment = existing.MonthlyDownPayment?.ToString() ?? string.Empty;
+            RafidainTotalPrice = existing.RafidainTotalPrice?.ToString() ?? string.Empty;
+            RafidainPaymentAmount = existing.RafidainPaymentAmount?.ToString() ?? string.Empty;
+            RafidainDownPayment = existing.RafidainDownPayment?.ToString() ?? string.Empty;
             DailyTotalPrice = existing.DailyTotalPrice?.ToString() ?? string.Empty;
             DailyPaymentAmount = existing.DailyPaymentAmount?.ToString() ?? string.Empty;
             Sku = existing.SKU ?? string.Empty;
@@ -105,6 +122,7 @@ public partial class ProductEditViewModel : ObservableObject
     {
         OnPropertyChanged(nameof(IsCashPriceEnabled));
         OnPropertyChanged(nameof(IsMonthlyPriceEnabled));
+        OnPropertyChanged(nameof(IsRafidainPriceEnabled));
         OnPropertyChanged(nameof(IsDailyPriceEnabled));
 
         if (!IsCashPriceEnabled) CashPrice = string.Empty;
@@ -112,6 +130,14 @@ public partial class ProductEditViewModel : ObservableObject
         {
             MonthlyTotalPrice = string.Empty;
             MonthlyPaymentAmount = string.Empty;
+            MonthlyDownPayment = string.Empty;
+        }
+
+        if (!IsRafidainPriceEnabled)
+        {
+            RafidainTotalPrice = string.Empty;
+            RafidainPaymentAmount = string.Empty;
+            RafidainDownPayment = string.Empty;
         }
 
         if (!IsDailyPriceEnabled)
@@ -141,22 +167,46 @@ public partial class ProductEditViewModel : ObservableObject
         var cash = ParseDecimalOrNull(CashPrice);
         var monthlyTotal = ParseDecimalOrNull(MonthlyTotalPrice);
         var monthlyPayment = ParseDecimalOrNull(MonthlyPaymentAmount);
+        var monthlyDownPayment = ParseDecimalOrNull(MonthlyDownPayment);
+        var rafidainTotal = ParseDecimalOrNull(RafidainTotalPrice);
+        var rafidainPayment = ParseDecimalOrNull(RafidainPaymentAmount);
+        var rafidainDownPayment = ParseDecimalOrNull(RafidainDownPayment);
         var dailyTotal = ParseDecimalOrNull(DailyTotalPrice);
         var dailyPayment = ParseDecimalOrNull(DailyPaymentAmount);
 
-        if (cash is null && monthlyTotal is null && monthlyPayment is null && dailyTotal is null && dailyPayment is null)
+        if (cash is null && monthlyTotal is null && monthlyPayment is null && rafidainTotal is null && rafidainPayment is null && dailyTotal is null && dailyPayment is null)
         {
             ErrorMessage = "يجب إدخال سعر واحد على الأقل ضمن الأسعار المسموحة لهذه الفئة";
             return;
         }
 
-        if (monthlyTotal.HasValue != monthlyPayment.HasValue || dailyTotal.HasValue != dailyPayment.HasValue)
+        if (monthlyTotal.HasValue != monthlyPayment.HasValue || rafidainTotal.HasValue != rafidainPayment.HasValue || dailyTotal.HasValue != dailyPayment.HasValue)
         {
             MessageBox.Show(
                 "يجب تعبئة كلا الحقلين معاً (المبلغ الكلي والدفعة) وإلا سيُعتبر هذا الخيار غير متوفر",
                 "تنبيه",
                 MessageBoxButton.OK,
                 MessageBoxImage.Warning);
+        }
+
+        if (monthlyDownPayment.HasValue && !(monthlyTotal.HasValue && monthlyPayment.HasValue))
+        {
+            MessageBox.Show(
+                "لا يمكن تحديد مقدمة القسط الشهري قبل تعبئة المبلغ الكلي والدفعة الشهرية للقسط الشهري",
+                "تنبيه",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+            return;
+        }
+
+        if (rafidainDownPayment.HasValue && !(rafidainTotal.HasValue && rafidainPayment.HasValue))
+        {
+            MessageBox.Show(
+                "لا يمكن تحديد مقدمة قسط الرافدين قبل تعبئة المبلغ الكلي والدفعة الشهرية لقسط الرافدين",
+                "تنبيه",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+            return;
         }
 
         ErrorMessage = string.Empty;
@@ -172,6 +222,10 @@ public partial class ProductEditViewModel : ObservableObject
                 CashPrice = cash,
                 MonthlyTotalPrice = monthlyTotal,
                 MonthlyPaymentAmount = monthlyPayment,
+                MonthlyDownPayment = monthlyDownPayment,
+                RafidainTotalPrice = rafidainTotal,
+                RafidainPaymentAmount = rafidainPayment,
+                RafidainDownPayment = rafidainDownPayment,
                 DailyTotalPrice = dailyTotal,
                 DailyPaymentAmount = dailyPayment,
                 SKU = string.IsNullOrWhiteSpace(Sku) ? null : Sku.Trim(),

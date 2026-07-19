@@ -6,6 +6,7 @@
         mc:Ignorable="d"
         Title="تسجيل الدخول — لوحة تحكم قلعة الضمان"
         Height="560" Width="440"
+        Icon="/Assets/app-icon.ico"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         FlowDirection="RightToLeft"

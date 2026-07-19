@@ -111,6 +111,41 @@ public partial class ContractRowViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task DeleteAsync()
+    {
+        var confirm = System.Windows.MessageBox.Show(
+            $"هل أنت متأكد من حذف ملف عقد \"{DisplayName}\"؟",
+            "تأكيد حذف الملف",
+            System.Windows.MessageBoxButton.YesNo,
+            System.Windows.MessageBoxImage.Warning);
+
+        if (confirm != System.Windows.MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        ErrorMessage = string.Empty;
+
+        try
+        {
+            var response = await _apiClient.DeleteAsync($"/api/admin/contracts/{PurchaseMethod}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                ContractPdfUrl = null;
+            }
+            else if (response.StatusCode != System.Net.HttpStatusCode.Unauthorized)
+            {
+                ErrorMessage = await ApiMessageReader.ReadAsync(response) ?? "تعذر حذف الملف";
+            }
+        }
+        catch (Exception)
+        {
+            ErrorMessage = "تعذر الاتصال بالخادم أثناء حذف الملف";
+        }
+    }
+
+    [RelayCommand]
     private void Open()
     {
         var url = _apiClient.ResolveMediaUrl(ContractPdfUrl);

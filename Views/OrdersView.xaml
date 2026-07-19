@@ -128,14 +128,22 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="التاريخ" Binding="{Binding CreatedAtText}" Width="140" />
-                    <DataGridTemplateColumn Header="" Width="100">
+                    <DataGridTemplateColumn Header="إجراءات" Width="180">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="تفاصيل"
-                                        Margin="4,2"
-                                        Padding="10,4"
-                                        Command="{Binding DataContext.OpenOrderCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                        CommandParameter="{Binding}" />
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="تفاصيل"
+                                            Margin="4,2"
+                                            Padding="10,4"
+                                            Command="{Binding DataContext.OpenOrderCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                            CommandParameter="{Binding}" />
+                                    <Button Content="حذف"
+                                            Style="{StaticResource DangerButtonStyle}"
+                                            Margin="4,2"
+                                            Padding="10,4"
+                                            Command="{Binding DataContext.DeleteOrderCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                            CommandParameter="{Binding}" />
+                                </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

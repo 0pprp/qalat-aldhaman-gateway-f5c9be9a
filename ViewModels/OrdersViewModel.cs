@@ -291,6 +291,45 @@ public partial class OrdersViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task DeleteOrderAsync(OrderRowViewModel row)
+    {
+        var confirm = MessageBox.Show(
+            $"هل أنت متأكد من حذف الطلب {row.OrderNumber} نهائياً؟\nهذا الإجراء لا يمكن التراجع عنه.",
+            "تأكيد حذف الطلب",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+        if (confirm != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        try
+        {
+            var response = await _apiClient.DeleteAsync($"/api/admin/orders/{row.Id}");
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return;
+            }
+
+            if (response.IsSuccessStatusCode)
+            {
+                await LoadAsync();
+            }
+            else
+            {
+                var error = await ApiMessageReader.ReadAsync(response) ?? "تعذر حذف الطلب";
+                MessageBox.Show(error, "خطأ", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        catch (Exception)
+        {
+            MessageBox.Show("تعذر الاتصال بالخادم، تحقق من اتصالك وحاول مرة أخرى", "خطأ", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    [RelayCommand]
     private void OpenOrder(OrderRowViewModel row)
     {
         var viewModel = new OrderDetailViewModel(_apiClient, row.Id);
@@ -301,7 +340,7 @@ public partial class OrdersViewModel : ObservableObject
 
         dialog.ShowDialog();
 
-        if (viewModel.WasStatusUpdated)
+        if (viewModel.WasStatusUpdated || viewModel.WasDeleted)
         {
             _ = LoadAsync();
         }

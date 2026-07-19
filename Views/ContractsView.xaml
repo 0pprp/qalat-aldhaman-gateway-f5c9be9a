@@ -63,6 +63,7 @@
                                         <ColumnDefinition Width="140" />
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
@@ -82,7 +83,15 @@
                                             Margin="0,0,12,0"
                                             Visibility="{Binding HasFile, Converter={StaticResource BoolToVis}}" />
 
-                                    <StackPanel Grid.Column="4" VerticalAlignment="Center">
+                                    <Button Grid.Column="4"
+                                            Content="حذف الملف"
+                                            Style="{StaticResource DangerButtonStyle}"
+                                            Command="{Binding DeleteCommand}"
+                                            Padding="12,6"
+                                            Margin="0,0,12,0"
+                                            Visibility="{Binding HasFile, Converter={StaticResource BoolToVis}}" />
+
+                                    <StackPanel Grid.Column="5" VerticalAlignment="Center">
                                         <TextBlock Text="جارِ الرفع..."
                                                    Visibility="{Binding IsUploading, Converter={StaticResource BoolToVis}}"
                                                    Style="{StaticResource CaptionTextStyle}" />

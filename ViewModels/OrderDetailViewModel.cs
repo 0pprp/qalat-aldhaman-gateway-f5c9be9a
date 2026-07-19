@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Net.Http.Json;
+using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using QalatAldhaman.Store.Admin.Models.Orders;
@@ -43,6 +44,10 @@ public partial class OrderDetailViewModel : ObservableObject
 
     public bool IsContentVisible => !IsLoading && !IsError;
     public bool WasStatusUpdated { get; private set; }
+    public bool WasDeleted { get; private set; }
+
+    /// <summary>يُطلَق بعد نجاح الحذف ليُغلق code-behind النافذة (ViewModel لا يملك مرجعاً للنافذة نفسها).</summary>
+    public event Action? CloseRequested;
 
     public string OrderNumberTitle => Order is null ? string.Empty : $"تفاصيل الطلب {Order.OrderNumber}";
     public string PurchaseMethodText => Order is null ? string.Empty : OrderDisplay.PurchaseMethodName(Order.PurchaseMethod);
@@ -156,6 +161,52 @@ public partial class OrderDetailViewModel : ObservableObject
             else if (response.StatusCode != System.Net.HttpStatusCode.Unauthorized)
             {
                 SaveErrorMessage = await ApiMessageReader.ReadAsync(response) ?? "تعذر حفظ الحالة";
+            }
+        }
+        catch (Exception)
+        {
+            SaveErrorMessage = "تعذر الاتصال بالخادم، تحقق من اتصالك وحاول مرة أخرى";
+        }
+        finally
+        {
+            IsSaving = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task DeleteAsync()
+    {
+        if (Order is null)
+        {
+            return;
+        }
+
+        var confirm = MessageBox.Show(
+            $"هل أنت متأكد من حذف الطلب {Order.OrderNumber} نهائياً؟\nهذا الإجراء لا يمكن التراجع عنه.",
+            "تأكيد حذف الطلب",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+        if (confirm != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        IsSaving = true;
+        SaveErrorMessage = string.Empty;
+
+        try
+        {
+            var response = await _apiClient.DeleteAsync($"/api/admin/orders/{_orderId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                WasDeleted = true;
+                CloseRequested?.Invoke();
+            }
+            else if (response.StatusCode != System.Net.HttpStatusCode.Unauthorized)
+            {
+                SaveErrorMessage = await ApiMessageReader.ReadAsync(response) ?? "تعذر حذف الطلب";
             }
         }
         catch (Exception)
